@@ -1,51 +1,55 @@
 "use client"
 
-import {type ReactTable, type RowData} from "@tanstack/react-table"
-import {Settings2} from "lucide-react"
+import {type Column, type ReactTable, type RowData} from "@tanstack/react-table"
+import {HugeiconsIcon} from "@hugeicons/react"
+import {SlidersHorizontalIcon} from "@hugeicons/core-free-icons"
 
 import {Button} from "@/components/ui/button"
 import {
     DropdownMenu,
     DropdownMenuCheckboxItem,
     DropdownMenuContent,
+    DropdownMenuGroup,
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-import {type TasksTableFeatures} from "./data-table-features"
+import {type DataTableFeatures} from "./data-table-features"
 
 export function DataTableViewOptions<TData extends RowData>({
                                                                 table,
                                                             }: {
-    table: ReactTable<TasksTableFeatures, TData>
+    table: ReactTable<DataTableFeatures, TData>
 }) {
     return (
         <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-                <Button
-                    variant="outline"
-                    size="sm"
-                    className="ml-auto hidden h-8 lg:flex"
-                >
-                    <Settings2/>
-                    View
-                </Button>
-            </DropdownMenuTrigger>
+            <DropdownMenuTrigger
+                render={
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        className="ml-auto hidden h-8 gap-1.5 lg:flex"
+                    >
+                        <HugeiconsIcon icon={SlidersHorizontalIcon} className="size-4"/>
+                        View
+                    </Button>
+                }
+            />
             <DropdownMenuContent align="end" className="w-[150px]">
+                <DropdownMenuGroup>
                 <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
-                <DropdownMenuSeparator/>
+                    <DropdownMenuSeparator/>
                 {table
                     .getAllColumns()
                     .filter(
-                        (column) =>
+                        (column: Column<DataTableFeatures, TData, unknown>) =>
                             typeof column.accessorFn !== "undefined" && column.getCanHide()
                     )
-                    .map((column) => {
+                    .map((column: Column<DataTableFeatures, TData, unknown>) => {
                         return (
                             <DropdownMenuCheckboxItem
                                 key={column.id}
-                                className="capitalize"
                                 checked={column.getIsVisible()}
                                 onCheckedChange={(value) => column.toggleVisibility(!!value)}
                             >
@@ -53,6 +57,7 @@ export function DataTableViewOptions<TData extends RowData>({
                             </DropdownMenuCheckboxItem>
                         )
                     })}
+                </DropdownMenuGroup>
             </DropdownMenuContent>
         </DropdownMenu>
     )

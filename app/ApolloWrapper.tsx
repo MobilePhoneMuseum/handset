@@ -1,18 +1,19 @@
 "use client";
 
-import {useSession} from "next-auth/react";
+import {getSession} from "next-auth/react";
 import {ApolloClient, ApolloNextAppProvider, InMemoryCache,} from "@apollo/client-integration-nextjs";
-import {ApolloLink, HttpLink} from "@apollo/client";
+import {HttpLink} from "@apollo/client";
+import {setContext} from "@apollo/client/link/context";
 
 function makeClient() {
     const httpLink = new HttpLink({
         uri: `${process.env.NEXT_PUBLIC_DIRECTUS_API}/graphql`
     });
 
-    const authLink = new ApolloLink((operation, forward) => {
-        const {data: session} = useSession();
+    const authLink = setContext(async (_, {headers = {}}) => {
+        const session = await getSession();
 
-        operation.setContext(({headers = {}}) => ({
+        return {
             headers: {
                 ...headers,
                 ...(session?.access_token
@@ -21,9 +22,7 @@ function makeClient() {
                     }
                     : {}),
             },
-        }));
-
-        return forward(operation);
+        };
     });
 
     return new ApolloClient({

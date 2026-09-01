@@ -11,10 +11,11 @@ import {
 
 import {HugeiconsIcon} from "@hugeicons/react";
 import {ArrowDownIcon, ArrowUpIcon, ChevronsUpIcon, EyeOffIcon} from "@hugeicons/core-free-icons";
+import {type DataTableFeatures} from "./data-table-features";
 
 interface DataTableColumnHeaderProps<TData extends RowData, TValue>
     extends React.HTMLAttributes<HTMLDivElement> {
-    column: Column<TasksTableFeatures, TData, TValue>
+    column: Column<DataTableFeatures, TData, TValue>
     title: string
 }
 

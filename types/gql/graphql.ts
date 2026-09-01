@@ -9,50 +9,196 @@ import type {TypedDocumentNode as DocumentNode} from '@graphql-typed-document-no
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
-export type QueryProductsQueryVariables = Exact<{ [key: string]: never; }>;
+export type QueryProductsQueryVariables = Exact<{
+    limit?: InputMaybe<Scalars['Int']['input']>;
+    page?: InputMaybe<Scalars['Int']['input']>;
+    search?: InputMaybe<Scalars['String']['input']>;
+    filter?: InputMaybe<Product_Filter>;
+    sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>> | InputMaybe<Scalars['String']['input']>>;
+}>;
 
 
 export type QueryProductsQuery = {
     product: Array<{
-        __typename: 'product',
-        id: string,
-        status: string | null,
-        imei: string | null,
-        description: string | null,
-        model: { __typename: 'model', id: string, name: string | null, display_name: string | null } | null
-    }>
+        __typename: 'product';
+        id: string;
+        status: string | null;
+        imei: string | null;
+        description: string | null;
+        model: {
+            __typename: 'model';
+            id: string;
+            name: string | null;
+            display_name: string | null;
+            slug: string;
+            brand: { __typename: 'brand'; name: string | null } | null;
+        } | null;
+    }>;
+    product_aggregated: Array<{
+        __typename: 'product_aggregated';
+        count: {
+            __typename: 'product_aggregated_count';
+            id: number | null;
+        } | null;
+    }>;
 };
 
 
 export const QueryProductsDocument = {
-    "kind": "Document",
-    "definitions": [{
+    "kind": "Document", "definitions": [{
         "kind": "OperationDefinition",
         "operation": "query",
         "name": {"kind": "Name", "value": "QueryProducts"},
+        "variableDefinitions": [{
+            "kind": "VariableDefinition",
+            "variable": {"kind": "Variable", "name": {"kind": "Name", "value": "limit"}},
+            "type": {"kind": "NamedType", "name": {"kind": "Name", "value": "Int"}},
+            "directives": []
+        }, {
+            "kind": "VariableDefinition",
+            "variable": {"kind": "Variable", "name": {"kind": "Name", "value": "page"}},
+            "type": {"kind": "NamedType", "name": {"kind": "Name", "value": "Int"}},
+            "directives": []
+        }, {
+            "kind": "VariableDefinition",
+            "variable": {"kind": "Variable", "name": {"kind": "Name", "value": "search"}},
+            "type": {"kind": "NamedType", "name": {"kind": "Name", "value": "String"}},
+            "directives": []
+        }, {
+            "kind": "VariableDefinition",
+            "variable": {"kind": "Variable", "name": {"kind": "Name", "value": "filter"}},
+            "type": {"kind": "NamedType", "name": {"kind": "Name", "value": "product_filter"}},
+            "directives": []
+        }, {
+            "kind": "VariableDefinition",
+            "variable": {"kind": "Variable", "name": {"kind": "Name", "value": "sort"}},
+            "type": {"kind": "ListType", "type": {"kind": "NamedType", "name": {"kind": "Name", "value": "String"}}},
+            "directives": []
+        }],
+        "directives": [],
         "selectionSet": {
-            "kind": "SelectionSet",
-            "selections": [{
+            "kind": "SelectionSet", "selections": [{
                 "kind": "Field",
                 "name": {"kind": "Name", "value": "product"},
+                "arguments": [{
+                    "kind": "Argument",
+                    "name": {"kind": "Name", "value": "limit"},
+                    "value": {"kind": "Variable", "name": {"kind": "Name", "value": "limit"}}
+                }, {
+                    "kind": "Argument",
+                    "name": {"kind": "Name", "value": "page"},
+                    "value": {"kind": "Variable", "name": {"kind": "Name", "value": "page"}}
+                }, {
+                    "kind": "Argument",
+                    "name": {"kind": "Name", "value": "search"},
+                    "value": {"kind": "Variable", "name": {"kind": "Name", "value": "search"}}
+                }, {
+                    "kind": "Argument",
+                    "name": {"kind": "Name", "value": "filter"},
+                    "value": {"kind": "Variable", "name": {"kind": "Name", "value": "filter"}}
+                }, {
+                    "kind": "Argument",
+                    "name": {"kind": "Name", "value": "sort"},
+                    "value": {"kind": "Variable", "name": {"kind": "Name", "value": "sort"}}
+                }],
+                "directives": [],
                 "selectionSet": {
                     "kind": "SelectionSet",
-                    "selections": [{"kind": "Field", "name": {"kind": "Name", "value": "id"}}, {
+                    "selections": [{
                         "kind": "Field",
-                        "name": {"kind": "Name", "value": "status"}
-                    }, {"kind": "Field", "name": {"kind": "Name", "value": "imei"}}, {
+                        "name": {"kind": "Name", "value": "id"},
+                        "arguments": [],
+                        "directives": []
+                    }, {
                         "kind": "Field",
-                        "name": {"kind": "Name", "value": "description"}
+                        "name": {"kind": "Name", "value": "status"},
+                        "arguments": [],
+                        "directives": []
+                    }, {
+                        "kind": "Field",
+                        "name": {"kind": "Name", "value": "imei"},
+                        "arguments": [],
+                        "directives": []
+                    }, {
+                        "kind": "Field",
+                        "name": {"kind": "Name", "value": "description"},
+                        "arguments": [],
+                        "directives": []
                     }, {
                         "kind": "Field",
                         "alias": {"kind": "Name", "value": "model"},
                         "name": {"kind": "Name", "value": "model_id"},
+                        "arguments": [],
+                        "directives": [],
                         "selectionSet": {
                             "kind": "SelectionSet",
-                            "selections": [{"kind": "Field", "name": {"kind": "Name", "value": "id"}}, {
+                            "selections": [{
                                 "kind": "Field",
-                                "name": {"kind": "Name", "value": "name"}
-                            }, {"kind": "Field", "name": {"kind": "Name", "value": "display_name"}}]
+                                "name": {"kind": "Name", "value": "id"},
+                                "arguments": [],
+                                "directives": []
+                            }, {
+                                "kind": "Field",
+                                "name": {"kind": "Name", "value": "name"},
+                                "arguments": [],
+                                "directives": []
+                            }, {
+                                "kind": "Field",
+                                "name": {"kind": "Name", "value": "display_name"},
+                                "arguments": [],
+                                "directives": []
+                            }, {
+                                "kind": "Field",
+                                "alias": {"kind": "Name", "value": "brand"},
+                                "name": {"kind": "Name", "value": "brand_id"},
+                                "arguments": [],
+                                "directives": [],
+                                "selectionSet": {
+                                    "kind": "SelectionSet",
+                                    "selections": [{
+                                        "kind": "Field",
+                                        "name": {"kind": "Name", "value": "name"},
+                                        "arguments": [],
+                                        "directives": []
+                                    }]
+                                }
+                            }, {
+                                "kind": "Field",
+                                "name": {"kind": "Name", "value": "slug"},
+                                "arguments": [],
+                                "directives": []
+                            }]
+                        }
+                    }]
+                }
+            }, {
+                "kind": "Field",
+                "name": {"kind": "Name", "value": "product_aggregated"},
+                "arguments": [{
+                    "kind": "Argument",
+                    "name": {"kind": "Name", "value": "search"},
+                    "value": {"kind": "Variable", "name": {"kind": "Name", "value": "search"}}
+                }, {
+                    "kind": "Argument",
+                    "name": {"kind": "Name", "value": "filter"},
+                    "value": {"kind": "Variable", "name": {"kind": "Name", "value": "filter"}}
+                }],
+                "directives": [],
+                "selectionSet": {
+                    "kind": "SelectionSet",
+                    "selections": [{
+                        "kind": "Field",
+                        "name": {"kind": "Name", "value": "count"},
+                        "arguments": [],
+                        "directives": [],
+                        "selectionSet": {
+                            "kind": "SelectionSet",
+                            "selections": [{
+                                "kind": "Field",
+                                "name": {"kind": "Name", "value": "id"},
+                                "arguments": [],
+                                "directives": []
+                            }]
                         }
                     }]
                 }
@@ -7318,6 +7464,7 @@ export type Update_Team_Input = {
     sort?: InputMaybe<Scalars['Int']['input']>;
     status?: InputMaybe<Scalars['String']['input']>;
 };
+
 
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;

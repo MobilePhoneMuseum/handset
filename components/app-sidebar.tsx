@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/sidebar"
 import {HugeiconsIcon} from "@hugeicons/react"
 import {BarcodeScanIcon, BoxIcon, FlipPhoneIcon, HomeIcon} from "@hugeicons/core-free-icons"
+import {NavSecondary} from "@/components/nav-secondary";
 
 const data = {
     user: {
@@ -70,6 +71,7 @@ export function AppSidebar({...props}: React.ComponentProps<typeof Sidebar>) {
                 {/*<NavSecondary items={data.navSecondary} className="mt-auto" />*/}
             </SidebarContent>
             <SidebarFooter>
+                <NavSecondary/>
                 <NavUser user={data.user}/>
             </SidebarFooter>
         </Sidebar>

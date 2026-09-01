@@ -2,36 +2,17 @@
 
 import * as React from "react"
 
-import {
-    SidebarGroup,
-    SidebarGroupContent,
-    SidebarMenu,
-    SidebarMenuButton,
-    SidebarMenuItem,
-} from "@/components/ui/sidebar"
+import {SidebarGroup, SidebarGroupContent, SidebarMenu,} from "@/components/ui/sidebar"
+import {PrinterStatusButton} from "@/components/printer/printer-status-button";
 
 export function NavSecondary({
-                                 items,
                                  ...props
-                             }: {
-    items: {
-        title: string
-        url: string
-        icon: React.ReactNode
-    }[]
-} & React.ComponentPropsWithoutRef<typeof SidebarGroup>) {
+                             }) {
     return (
         <SidebarGroup {...props}>
             <SidebarGroupContent>
                 <SidebarMenu>
-                    {items.map((item) => (
-                        <SidebarMenuItem key={item.title}>
-                            <SidebarMenuButton render={<a href={item.url}/>}>
-                                {item.icon}
-                                <span>{item.title}</span>
-                            </SidebarMenuButton>
-                        </SidebarMenuItem>
-                    ))}
+                    <PrinterStatusButton/>
                 </SidebarMenu>
             </SidebarGroupContent>
         </SidebarGroup>
