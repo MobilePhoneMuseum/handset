@@ -5,12 +5,12 @@ import {usePrinter} from '@/hooks/use-printer';
 import type {LabelSize, ProductPrintData} from '@/lib/printer/types';
 import {generateLabelSvg} from '@/lib/printer/label-templates';
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
 } from '@/components/ui/dialog';
 import {Button} from '@/components/ui/button';
 import {Input} from '@/components/ui/input';
@@ -44,7 +44,7 @@ export function LabelPreviewDialog({
 
     const handlePrint = async () => {
         if (!isConnected) {
-            toast.error('Printer is not connected. Please connect via printer settings.');
+            toast.add({type: 'error', description: 'Printer is not connected. Please connect via printer settings.'});
             return;
         }
 
@@ -55,15 +55,17 @@ export function LabelPreviewDialog({
                 copies,
             });
             if (ok) {
-                toast.success(
-                    `Printed label for ${product.model?.display_name || product.model?.name || product.id}`
+                toast.add({
+                        type: 'success',
+                        description: `Printed label for ${product.model?.display_name || product.model?.name || product.id}`
+                    }
                 );
                 onOpenChange(false);
             } else {
-                toast.error('Printing failed. Please check printer connection.');
+                toast.add({type: 'error', description: 'Printing failed. Please check printer connection.'});
             }
         } catch {
-            toast.error('An error occurred while printing.');
+            toast.add({type: 'error', description: 'An error occurred while printing.'});
         } finally {
             setLoading(false);
         }

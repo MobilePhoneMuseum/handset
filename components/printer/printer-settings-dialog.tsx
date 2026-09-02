@@ -35,18 +35,18 @@ export function PrinterSettingsDialog({
         try {
             const ok = await connect();
             if (ok) {
-                toast.success('Printer connected successfully');
+                toast.add({type: 'success', description: 'Printer connected successfully'});
             } else {
-                toast.error('Could not pair with printer.');
+                toast.add({type: 'error', description: 'Could not pair with printer.'});
             }
         } catch {
-            toast.error('An error occurred while connecting.');
+            toast.add({type: 'error', description: 'An error occurred while connecting.'});
         }
     };
 
     const handleDisconnect = async () => {
         await disconnect();
-        toast.info('Printer disconnected');
+        toast.add({type: 'info', description: 'Printer disconnected'});
     };
 
     const handleFeed = async () => {
@@ -54,12 +54,12 @@ export function PrinterSettingsDialog({
         try {
             const ok = await feedLabel();
             if (ok) {
-                toast.success('Test feed completed');
+                toast.add({type: 'info', description: 'Test feed completed'});
             } else {
-                toast.error('Failed to send feed command');
+                toast.add({type: 'error', description: 'Failed to send feed command'});
             }
         } catch {
-            toast.error('Error feeding label');
+            toast.add({type: 'error', description: 'Error feeding label'});
         } finally {
             setIsFeeding(false);
         }

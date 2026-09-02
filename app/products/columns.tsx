@@ -39,20 +39,21 @@ function ProductRowActions({product}: { product: Product }) {
 
   const handleQuickPrint = async () => {
     if (!isConnected) {
-      toast.error('Printer is not connected. Please connect via printer settings.');
+      toast.add({type: 'error', description: 'Printer is not connected. Please connect via printer settings.'});
       return;
     }
     try {
       const ok = await printProductLabel(product);
       if (ok) {
-        toast.success(
-            `Printed label for ${product.model?.display_name || product.model?.name || product.id}`
-        );
+        toast.add({
+          type: 'success',
+          description: `Printed label for ${product.model?.display_name || product.model?.name || product.id}`
+        });
       } else {
-        toast.error('Print job failed.');
+        toast.add({type: 'error', description: 'Print job failed.'});
       }
     } catch {
-      toast.error('An error occurred while printing.');
+      toast.add({type: 'error', description: 'An error occurred while printing.'});
     }
   };
 

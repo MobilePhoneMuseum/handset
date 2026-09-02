@@ -120,26 +120,27 @@ export default function Page() {
         clearSelection: () => void
     ) => {
         if (!isConnected) {
-            toast.error(
-                'Printer is not connected. Please connect via printer settings in the header.'
-            );
+            toast.add({
+                type: 'error',
+                description: 'Printer is not connected. Please connect via printer settings in the header.'
+            });
             return;
         }
 
         try {
             const res = await printBatchLabels(selectedProducts);
             if (res.success > 0) {
-                toast.success(
-                    `Printed ${res.success} label${res.success > 1 ? 's' : ''}${
+                toast.add({
+                    type: 'success', description: `Printed ${res.success} label${res.success > 1 ? 's' : ''}${
                         res.failed > 0 ? ` (${res.failed} failed)` : ''
                     }`
-                );
+                })
                 clearSelection();
             } else {
-                toast.error('Batch printing failed. Please check printer connection.');
+                toast.add({type: 'error', description: 'Batch printing failed. Please check printer connection.'});
             }
         } catch {
-            toast.error('An error occurred during batch printing.');
+            toast.add({type: 'error', description: 'An error occurred during batch printing.'});
         }
     };
 
