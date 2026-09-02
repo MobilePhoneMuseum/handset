@@ -26,7 +26,10 @@
       "@/*": [
         "./*"
       ]
-    }
+    },
+    "types": [
+      "w3c-web-usb"
+    ]
   },
   "include": [
     "next-env.d.ts",
