@@ -1,5 +1,4 @@
 import type {Metadata} from "next";
-import {JetBrains_Mono, Montserrat} from "next/font/google";
 import "./globals.css";
 import {cn} from "@/lib/utils";
 import {TooltipProvider} from "@/components/ui/tooltip";
@@ -12,11 +11,7 @@ import AuthProvider from "@/components/auth-provider";
 import {Toaster} from "@/components/ui/toast";
 import {ApolloWrapper} from "@/app/ApolloWrapper";
 import {PrinterProvider} from "@/components/printer/printer-provider";
-
-const monoHeading = JetBrains_Mono({subsets: ['latin'], variable: '--font-heading'});
-const mono = JetBrains_Mono({subsets: ['latin'], variable: '--font-mono'});
-
-const montserrat = Montserrat({subsets: ['latin'], variable: '--font-sans'});
+import {galanoGrotesque, mono, monoHeading, montserrat, nokiaFC22} from "@/app/fonts";
 
 export const metadata: Metadata = {
     title: "Handset",
@@ -29,7 +24,7 @@ export default async function RootLayout({children}: LayoutProps<"/">) {
 
         <html
             lang="en"
-            className={cn("h-full", "antialiased", mono.variable, "font-sans", montserrat.variable, monoHeading.variable)}
+            className={cn("h-full", "antialiased", mono.variable, "font-sans", montserrat.variable, monoHeading.variable, nokiaFC22.variable, galanoGrotesque.variable)}
         >
         <head>
             <meta name="apple-mobile-web-app-title" content="Handset"/>

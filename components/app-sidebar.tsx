@@ -1,8 +1,9 @@
 "use client"
 
 import * as React from "react"
+import {Suspense} from "react"
 import {NavMain} from "@/components/nav-main"
-import {NavUser} from "@/components/nav-user"
+import {NavUser, NavUserSkeleton} from "@/components/nav-user"
 import {
     Sidebar,
     SidebarContent,
@@ -60,7 +61,7 @@ export function AppSidebar({...props}: React.ComponentProps<typeof Sidebar>) {
                             render={<a href="#"/>}
                         >
                             <HugeiconsIcon icon={FlipPhoneIcon} strokeWidth={2} className="size-5!"/>
-                            <span className="text-base font-black font-montserrat font-heading uppercase">Handset</span>
+                            <span className="text-base font-nokia-fc22 font-black font-heading uppercase">Handset</span>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                 </SidebarMenu>
@@ -72,7 +73,9 @@ export function AppSidebar({...props}: React.ComponentProps<typeof Sidebar>) {
             </SidebarContent>
             <SidebarFooter>
                 <NavSecondary/>
-                <NavUser user={data.user}/>
+                <Suspense fallback={<NavUserSkeleton/>}>
+                    <NavUser/>
+                </Suspense>
             </SidebarFooter>
         </Sidebar>
     )

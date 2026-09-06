@@ -2,22 +2,43 @@
 
 import {Avatar, AvatarFallback, AvatarImage,} from "@/components/ui/avatar"
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import {SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar,} from "@/components/ui/sidebar"
+import {Skeleton} from "@/components/ui/skeleton"
 import {HugeiconsIcon} from "@hugeicons/react"
 import {Logout01Icon, MoreVerticalCircle01Icon, UserIcon} from "@hugeicons/core-free-icons"
 import {signIn, signOut, useSession} from "next-auth/react";
 
+export function NavUserSkeleton() {
+    return (
+        <SidebarMenu>
+            <SidebarMenuItem>
+                <SidebarMenuButton size="lg" className="pointer-events-none">
+                    <Skeleton className="size-8 rounded-lg"/>
+                    <div className="grid flex-1 gap-1 text-left text-sm leading-tight">
+                        <Skeleton className="h-4 w-24"/>
+                    </div>
+                </SidebarMenuButton>
+            </SidebarMenuItem>
+        </SidebarMenu>
+    )
+}
+
 export function NavUser() {
-    const {data: session} = useSession()
+    const {data: session, status} = useSession()
     const {isMobile} = useSidebar()
+
+    if (status === "loading") {
+        return <NavUserSkeleton/>
+    }
+
     if (!session?.user) {
         return (
             <SidebarMenu>
@@ -49,7 +70,8 @@ export function NavUser() {
                         }
                     >
                         <Avatar className="size-8 rounded-lg">
-                            <AvatarImage src={session?.user?.image} alt={session?.user?.name}/>
+                            <AvatarImage src={session?.user?.image ?? undefined}
+                                         alt={session?.user?.name ?? undefined}/>
                             <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                         </Avatar>
                         <div className="grid flex-1 text-left text-sm leading-tight">
@@ -67,7 +89,8 @@ export function NavUser() {
                             <DropdownMenuLabel className="p-0 font-normal">
                                 <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                                     <Avatar className="size-8">
-                                        <AvatarImage src={session?.user?.image} alt={session?.user?.name}/>
+                                        <AvatarImage src={session?.user?.image ?? undefined}
+                                                     alt={session?.user?.name ?? undefined}/>
                                         <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                                     </Avatar>
                                     <div className="grid flex-1 text-left text-sm leading-tight">
