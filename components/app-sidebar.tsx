@@ -33,14 +33,14 @@ const data = {
         },
         {
             title: "Products",
-            url: "products/",
+            url: "/products/",
             icon: (
                 <HugeiconsIcon icon={BoxIcon} strokeWidth={2}/>
             ),
         },
         {
             title: "Scanify",
-            url: "scan/",
+            url: "/scan/",
             icon: (
                 <HugeiconsIcon icon={BarcodeScanIcon} strokeWidth={2}/>
             ),

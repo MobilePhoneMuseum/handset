@@ -19,7 +19,7 @@ export default function pageHeadbar({
     return (
         <div className="lg:flex lg:items-center lg:justify-between mb-2">
             <div className="min-w-0 flex-1">
-                <h1 className="text-4xl text-gray-900 font-bold py-2 pl-2 sm:truncate flex items-center">
+                <h1 className="text-4xl text-primary font-bold py-2 pl-2 sm:truncate flex items-center">
                     {React.cloneElement(icon, {
                         className: cn('w-10 h-10 mr-2', iconClassName),
                     })}

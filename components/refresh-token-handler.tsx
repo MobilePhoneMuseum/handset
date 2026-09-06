@@ -1,7 +1,11 @@
 import {useSession} from "next-auth/react";
 import {useEffect} from "react";
 
-const RefreshTokenHandler = (props) => {
+interface RefreshTokenHandlerProps {
+    setInterval: (interval: number) => void;
+}
+
+const RefreshTokenHandler = (props: RefreshTokenHandlerProps) => {
     const {data: session} = useSession();
 
     useEffect(() => {

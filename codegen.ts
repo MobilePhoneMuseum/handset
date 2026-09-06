@@ -11,7 +11,7 @@ const config: CodegenConfig = {
             },
         },
     ],
-    documents: ['app/**/*.{ts,tsx}'],
+    documents: ['app/**/*.{ts,tsx}', 'components/**/*.{ts,tsx}'],
     ignoreNoDocuments: true,
 
     generates: {

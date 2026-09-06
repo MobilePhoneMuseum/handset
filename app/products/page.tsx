@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import {DataTable} from '@/components/data-table';
 import {DataTableToolbar} from '@/components/data-table-toolbar';
 import {useQuery} from '@apollo/client/react';
@@ -149,10 +150,12 @@ export default function Page() {
         <>
             <PageHeadbar title="Library Products" icon={<HugeiconsIcon icon={BoxIcon}/>}>
         <span className="ml-3">
-          <Button>
-            <HugeiconsIcon icon={WandSparkles}/>
-            Create New
-          </Button>
+          <Link href="/products/new">
+            <Button>
+              <HugeiconsIcon icon={WandSparkles}/>
+              Create New
+            </Button>
+          </Link>
         </span>
             </PageHeadbar>
 
