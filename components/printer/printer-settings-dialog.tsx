@@ -120,7 +120,7 @@ export function PrinterSettingsDialog({
                     {!isSupported && (
                         <div
                             className="text-xs text-muted-foreground bg-destructive/10 border border-destructive/20 p-3">
-                            WebUSB label printing requires a browser with WebUSB support (Google Chrome, Microsoft Edge,
+                            Label printing requires a browser with WebUSB support (Google Chrome, Microsoft Edge,
                             Opera) and a secure context (HTTPS/localhost).
                         </div>
                     )}

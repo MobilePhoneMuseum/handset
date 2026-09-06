@@ -33,11 +33,12 @@ const GET_PRODUCTS = gql(`
             status
             imei
             description
-            model: model_id {
+            model_id {
                 id
                 name
                 display_name
-                brand: brand_id {
+                brand_id {
+                    id
                     name
                 }
                 slug

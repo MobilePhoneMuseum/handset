@@ -60,7 +60,7 @@ export function AppSidebar({...props}: React.ComponentProps<typeof Sidebar>) {
                             render={<a href="#"/>}
                         >
                             <HugeiconsIcon icon={FlipPhoneIcon} strokeWidth={2} className="size-5!"/>
-                            <span className="text-base font-semibold font-heading uppercase">Handset</span>
+                            <span className="text-base font-black font-montserrat font-heading uppercase">Handset</span>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                 </SidebarMenu>

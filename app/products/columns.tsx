@@ -43,11 +43,11 @@ function ProductRowActions({product}: { product: Product }) {
       return;
     }
     try {
-      const ok = await printProductLabel(product);
+      const ok = await printProductLabel(product, {labelSize: "small_47x20", copies: 2});
       if (ok) {
         toast.add({
           type: 'success',
-          description: `Printed label for ${product.model?.display_name || product.model?.name || product.id}`
+          description: `Printed labels for ${product.model_id?.display_name || product.model_id?.name || product.id}`
         });
       } else {
         toast.add({type: 'error', description: 'Print job failed.'});
@@ -77,7 +77,7 @@ function ProductRowActions({product}: { product: Product }) {
                 <HugeiconsIcon icon={ClipboardCopy}/> Copy Slug
               </DropdownMenuItem>
               <DropdownMenuItem onClick={handleQuickPrint}>
-                <HugeiconsIcon icon={PrinterIcon}/> Print Label
+                <HugeiconsIcon icon={PrinterIcon}/> Quick Tag (print 2 labels)
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => setPreviewOpen(true)}>
                 <HugeiconsIcon icon={PrinterIcon}/> Preview & Print...
@@ -102,14 +102,14 @@ export const columns = columnHelper.columns([
         <Checkbox
             checked={table.getIsAllPageRowsSelected()}
             indeterminate={table.getIsSomePageRowsSelected()}
-            onCheckedChange={(checked) => table.toggleAllPageRowsSelected(!!checked)}
+            onCheckedChange={(checked) => table.toggleAllPageRowsSelected(checked)}
             aria-label="Select all"
         />
     ),
     cell: ({row}) => (
         <Checkbox
             checked={row.getIsSelected()}
-            onCheckedChange={(checked) => row.toggleSelected(!!checked)}
+            onCheckedChange={(checked) => row.toggleSelected(checked)}
             aria-label="Select row"
         />
     ),
@@ -128,7 +128,7 @@ export const columns = columnHelper.columns([
       );
     },
   }),
-  columnHelper.accessor((row) => row.model?.display_name, {
+  columnHelper.accessor((row) => row.model_id?.display_name, {
     id: 'model',
     header: 'Model',
   }),
@@ -149,7 +149,7 @@ export const columns = columnHelper.columns([
     cell: ({row}) => {
       return (
           <div className="flex gap-2">
-          <span className="max-w-[500px] truncate font-medium">
+          <span className="max-w-125 truncate font-medium">
             {row.original.description}
           </span>
           </div>

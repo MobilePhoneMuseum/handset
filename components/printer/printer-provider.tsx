@@ -3,7 +3,8 @@
 import React, {createContext, useCallback, useEffect, useState} from 'react';
 import {PrinterService, printerService} from '@/lib/printer/printer-service';
 import {buildFeedDocument, buildProductLabelDocument} from '@/lib/printer/label-templates';
-import type {PrinterContextValue, PrinterState, PrintOptions, ProductPrintData,} from '@/lib/printer/types';
+import type {PrinterContextValue, PrinterState, PrintOptions,} from '@/lib/printer/types';
+import {Product} from "@/types/gql/graphql";
 
 export const PrinterContext = createContext<PrinterContextValue | null>(null);
 
@@ -112,7 +113,7 @@ export function PrinterProvider({children}: { children: React.ReactNode }) {
     }, []);
 
     const printProductLabel = useCallback(
-        async (product: ProductPrintData, options?: PrintOptions): Promise<boolean> => {
+        async (product: Product, options?: PrintOptions): Promise<boolean> => {
             const activePrinter = printerService.getActivePrinter() || state.printer;
             if (!activePrinter) {
                 setState((prev) => ({...prev, error: 'No printer connected.'}));
@@ -136,7 +137,7 @@ export function PrinterProvider({children}: { children: React.ReactNode }) {
 
     const printBatchLabels = useCallback(
         async (
-            products: ProductPrintData[],
+            products: Product[],
             options?: PrintOptions
         ): Promise<{ success: number; failed: number }> => {
             const activePrinter = printerService.getActivePrinter() || state.printer;

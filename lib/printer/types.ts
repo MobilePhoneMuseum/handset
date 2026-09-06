@@ -1,6 +1,10 @@
 import type {LabelPrinterUsb} from 'webzlp';
+import {Product} from "@/types/gql/graphql";
 
-export type LabelSize = 'small_47x20' | 'small_50x25' | 'medium_57x32' | 'large_100x150';
+// Right now we only support printing the small phone labels - this will expand in future for things like container labels
+export type LabelSize = 'small_47x20'
+
+// export type LabelSize = 'small_47x20' | 'small_50x25' | 'medium_57x32' | 'large_100x150';
 
 export interface LabelDimensions {
     widthDots: number;
@@ -12,22 +16,6 @@ export interface PrintOptions {
     copies?: number;
     labelSize?: LabelSize;
     darkness?: number; // 0 to 30
-}
-
-export interface ProductPrintData {
-    id: string;
-    imei?: string | null;
-    description?: string | null;
-    status?: string | null;
-    model?: {
-        id?: string | null;
-        name?: string | null;
-        display_name?: string | null;
-        brand?: {
-            name?: string | null;
-        }
-        slug?: string | null;
-    } | null;
 }
 
 export interface PrinterState {
@@ -43,9 +31,9 @@ export interface PrinterState {
 export interface PrinterContextValue extends PrinterState {
     connect: () => Promise<boolean>;
     disconnect: () => Promise<void>;
-    printProductLabel: (product: ProductPrintData, options?: PrintOptions) => Promise<boolean>;
+    printProductLabel: (product: Product, options?: PrintOptions) => Promise<boolean>;
     printBatchLabels: (
-        products: ProductPrintData[],
+        products: Product[],
         options?: PrintOptions
     ) => Promise<{ success: number; failed: number }>;
     feedLabel: () => Promise<boolean>;

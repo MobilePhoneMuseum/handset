@@ -2,8 +2,8 @@
 
 import React, {useMemo, useState} from 'react';
 import {usePrinter} from '@/hooks/use-printer';
-import type {LabelSize, ProductPrintData} from '@/lib/printer/types';
-import {generateLabelSvg} from '@/lib/printer/label-templates';
+import type {LabelSize} from '@/lib/printer/types';
+import {generateProductLabelSvg} from '@/lib/printer/label-templates';
 import {
     Dialog,
     DialogContent,
@@ -18,9 +18,10 @@ import {Label} from '@/components/ui/label';
 import {toast} from '@/components/ui/toast';
 import {HugeiconsIcon} from '@hugeicons/react';
 import {Alert02Icon, Loading03Icon, PrinterIcon, UsbIcon,} from '@hugeicons/core-free-icons';
+import {Product} from "@/types/gql/graphql";
 
 interface LabelPreviewDialogProps {
-    product: ProductPrintData | null;
+    product: Product | null;
     open: boolean;
     onOpenChange: (open: boolean) => void;
 }
@@ -37,7 +38,7 @@ export function LabelPreviewDialog({
 
     const previewSvg = useMemo(() => {
         if (!product) return '';
-        return generateLabelSvg(product, {labelSize, copies});
+        return generateProductLabelSvg(product, {labelSize, copies});
     }, [product, labelSize, copies]);
 
     if (!product) return null;
@@ -57,7 +58,7 @@ export function LabelPreviewDialog({
             if (ok) {
                 toast.add({
                         type: 'success',
-                        description: `Printed label for ${product.model?.display_name || product.model?.name || product.id}`
+                    description: `Printed label for ${product.model_id?.display_name || product.model_id?.name || product.id}`
                     }
                 );
                 onOpenChange(false);
@@ -82,7 +83,7 @@ export function LabelPreviewDialog({
                     <DialogDescription>
                         Preview label layout and adjust print parameters for{' '}
                         <span className="font-medium text-foreground">
-              {product.model?.display_name || product.model?.name || product.id}
+              {product.model_id?.display_name || product.model_id?.name || product.id}
             </span>
                         .
                     </DialogDescription>

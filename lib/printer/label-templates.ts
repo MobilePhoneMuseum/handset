@@ -2,7 +2,9 @@ import type {IDocument} from 'webzlp';
 import {LabelDocumentBuilder, ReadyToPrintDocuments} from 'webzlp';
 import {DATAMatrix, encodeToMatrix} from 'datamatrix-svg-ts';
 import icon from '@/public/icon.svg';
-import type {LabelDimensions, LabelSize, PrintOptions, ProductPrintData} from './types';
+import type {LabelDimensions, LabelSize, PrintOptions} from './types';
+import {Product} from "@/types/gql/graphql";
+import {escapeXml} from "@/lib/utils";
 
 export const LABEL_DIMENSIONS: Record<LabelSize, LabelDimensions> = {
     small_47x20: {
@@ -10,41 +12,22 @@ export const LABEL_DIMENSIONS: Record<LabelSize, LabelDimensions> = {
         heightDots: 160,
         dotsPerMm: 8,
     },
-    small_50x25: {
-        widthDots: 406,
-        heightDots: 203,
-        dotsPerMm: 8,
-    },
-    medium_57x32: {
-        widthDots: 457,
-        heightDots: 254,
-        dotsPerMm: 8,
-    },
-    large_100x150: {
-        widthDots: 812,
-        heightDots: 1218,
-        dotsPerMm: 8,
-    },
+    // small_50x25: {
+    //     widthDots: 406,
+    //     heightDots: 203,
+    //     dotsPerMm: 8,
+    // },
+    // medium_57x32: {
+    //     widthDots: 457,
+    //     heightDots: 254,
+    //     dotsPerMm: 8,
+    // },
+    // large_100x150: {
+    //     widthDots: 812,
+    //     heightDots: 1218,
+    //     dotsPerMm: 8,
+    // },
 };
-
-function escapeXml(unsafe: string): string {
-    return unsafe.replace(/[<>&'"]/g, (c) => {
-        switch (c) {
-            case '<':
-                return '&lt;';
-            case '>':
-                return '&gt;';
-            case '&':
-                return '&amp;';
-            case '\'':
-                return '&apos;';
-            case '"':
-                return '&quot;';
-            default:
-                return c;
-        }
-    });
-}
 
 /**
  * Renders a DataMatrix barcode SVG block using datamatrix-svg-ts.
@@ -91,7 +74,7 @@ function renderDataMatrixSvg(
             }
         }
         return `
-<svg x="${x}" y="${y}" width="${size}" height="${size}" viewBox="0 0 ${svgWidth} ${svgHeight}" fill="#000000" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg" version="1.1">
+<svg x="${x}" y="${y}" width="${size}" height="${size}" viewBox="0 0 ${svgWidth} ${svgHeight}" fill="#000000" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg">
   <path fill="#ffffff" d="M0,0v${svgHeight}h${svgWidth}V0H0Z"/>
   <path transform="matrix(1,0,0,1,${padding},${padding})" d="${pathData}"/>
 </svg>
@@ -125,17 +108,17 @@ function renderMuseumLogo(
  * Generate an SVG representation of the label layout.
  * Used for both on-screen visual preview and WebZLP GRF bitmap compilation.
  */
-export function generateLabelSvg(
-    product: ProductPrintData,
+export function generateProductLabelSvg(
+    product: Product,
     options: PrintOptions = {}
 ): string {
     const sizeKey = options.labelSize || 'small_47x20';
     const dimensions = LABEL_DIMENSIONS[sizeKey] || LABEL_DIMENSIONS.small_47x20;
     const {widthDots, heightDots} = dimensions;
 
-    const productModelName = escapeXml(product.model?.name || 'MPM Asset'
+    const productModelName = escapeXml(product.model_id?.name || 'MPM Asset'
     );
-    const productModelManu = escapeXml(product.model?.brand?.name || '');
+    const productModelManu = escapeXml(product.model_id?.brand_id?.name || '');
     const productId = escapeXml(product.id || '');
     const imei = product.imei ? escapeXml(product.imei) : '';
     const targetUrl = product.id
@@ -254,7 +237,7 @@ export function generateLabelSvg(
  * Builds a printable label document for WebZLP.
  */
 export async function buildProductLabelDocument(
-    product: ProductPrintData,
+    product: Product,
     options: PrintOptions = {}
 ): Promise<IDocument> {
     const sizeKey = options.labelSize || 'small_47x20';
@@ -264,7 +247,7 @@ export async function buildProductLabelDocument(
     builder.startNewLabel();
     builder.clearImageBuffer();
 
-    const svg = generateLabelSvg(product, options);
+    const svg = generateProductLabelSvg(product, options);
     await builder.addImageFromSVG(svg, dimensions.widthDots, dimensions.heightDots);
 
     const copies = options.copies && options.copies > 1 ? options.copies : 1;
