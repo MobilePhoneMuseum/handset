@@ -26,8 +26,16 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from '@/components/ui/select';
-import {Field, FieldError, FieldGroup, FieldLabel} from '@/components/ui/field';
+import {Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue,} from '@/components/ui/select';
+import {
+    Field,
+    FieldDescription,
+    FieldError,
+    FieldGroup,
+    FieldLabel,
+    FieldLegend,
+    FieldSet
+} from '@/components/ui/field';
 import {toast} from '@/components/ui/toast';
 import {cn} from '@/lib/utils';
 import {CREATE_MODEL, SEARCH_BRANDS, SEARCH_FORM_FACTORS, SEARCH_MODELS,} from '@/app/products/new/queries';
@@ -312,6 +320,19 @@ export function CreateModelDialog({
     const [isBrandOpen, setIsBrandOpen] = React.useState(false);
     const [selectedBrand, setSelectedBrand] = React.useState<{ id: string; name: string } | null>(null);
     const brandDropdownRef = React.useRef<HTMLDivElement>(null);
+
+    const days: { label: string; value: string | null }[] = [
+        {label: "DD", value: null},
+    ]
+    for (let i = 0; i < 31; i++) {
+        days.push({label: (i + 1).toString().padStart(2, '0'), value: (i + 1).toString().padStart(2, '0')});
+    }
+    const months: { label: string; value: string | null }[] = [
+        {label: "MM", value: null},
+    ]
+    for (let i = 0; i < 12; i++) {
+        months.push({label: (i + 1).toString().padStart(2, '0'), value: (i + 1).toString().padStart(2, '0')});
+    }
 
     React.useEffect(() => {
         const timer = setTimeout(() => {
@@ -630,33 +651,64 @@ export function CreateModelDialog({
                                 </Select>
                             </Field>
                         </div>
+                        <FieldGroup>
+                            <FieldSet>
+                                <FieldLegend>Announcement Date</FieldLegend>
+                                <FieldDescription>
+                                    Where possible, use the date of the announcement, not first orders / release.
+                                    Coarseness is permitted (e.g. just year).
+                                </FieldDescription>
+                                <FieldGroup>
+                                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                                        <Field>
+                                            <FieldLabel>Day</FieldLabel>
+                                            <Select items={days}
+                                                    disabled={isSubmitting} {...form.register('release_day')}>
+                                                <SelectTrigger id="checkout-7j9-exp-year-f59">
+                                                    <SelectValue/>
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectGroup>
+                                                        {days.map((item) => (
+                                                            <SelectItem key={item.value} value={item.value}>
+                                                                {item.label}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectGroup>
+                                                </SelectContent>
+                                            </Select>
+                                        </Field>
+                                        <Field>
+                                            <FieldLabel>Month</FieldLabel>
+                                            <Select items={months}
+                                                    disabled={isSubmitting} {...form.register('release_month')}>
+                                                <SelectTrigger id="checkout-7j9-exp-year-f59">
+                                                    <SelectValue/>
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectGroup>
+                                                        {months.map((item) => (
+                                                            <SelectItem key={item.value} value={item.value}>
+                                                                {item.label}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectGroup>
+                                                </SelectContent>
+                                            </Select>
+                                        </Field>
+                                        <Field>
+                                            <FieldLabel>Year</FieldLabel>
+                                            <Input
+                                                placeholder="e.g. 2001"
+                                                {...form.register('release_year')}
+                                                disabled={isSubmitting}
+                                            />
+                                        </Field>
+                                    </div>
+                                </FieldGroup>
+                            </FieldSet>
+                        </FieldGroup>
 
-                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-                            <Field>
-                                <FieldLabel>Release Year</FieldLabel>
-                                <Input
-                                    placeholder="e.g. 2001"
-                                    {...form.register('release_year')}
-                                    disabled={isSubmitting}
-                                />
-                            </Field>
-                            <Field>
-                                <FieldLabel>Release Month</FieldLabel>
-                                <Input
-                                    placeholder="e.g. 11"
-                                    {...form.register('release_month')}
-                                    disabled={isSubmitting}
-                                />
-                            </Field>
-                            <Field>
-                                <FieldLabel>Release Day</FieldLabel>
-                                <Input
-                                    placeholder="e.g. 7"
-                                    {...form.register('release_day')}
-                                    disabled={isSubmitting}
-                                />
-                            </Field>
-                        </div>
 
                         <Field>
                             <FieldLabel>Description / Summary</FieldLabel>
