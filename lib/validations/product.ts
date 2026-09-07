@@ -34,7 +34,7 @@ export const modelFormSchema = z.object({
     release_year: z.string().optional(),
     release_month: z.string().optional(),
     release_day: z.string().optional(),
-    weight: z.int().min(5, 'Weight in grams').optional(),
+    weight: z.coerce.number<number>('Must be a number').int().positive().min(5, 'Weight in grams').nullable().optional(),
     description: z.string().optional(),
     status: z.enum(['draft', 'published', 'archived']),
 });

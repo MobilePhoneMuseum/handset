@@ -385,6 +385,7 @@ export function CreateModelDialog({
             release_year: '',
             release_month: '',
             release_day: '',
+            weight: null,
             description: '',
             status: 'published',
         },
@@ -433,6 +434,7 @@ export function CreateModelDialog({
                         release_year: values.release_year?.trim() || undefined,
                         release_month: values.release_month?.trim() || undefined,
                         release_day: values.release_day?.trim() || undefined,
+                        weight: values.weight || undefined,
                         description: values.description?.trim() || undefined,
                         status: values.status,
                     },
@@ -708,6 +710,26 @@ export function CreateModelDialog({
                                 </FieldGroup>
                             </FieldSet>
                         </FieldGroup>
+
+                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                            <Field>
+                                <FieldLabel>
+                                    Weight <span className="text-muted">(grams)</span>
+                                </FieldLabel>
+                                <Input
+                                    type="number"
+                                    placeholder="e.g. 50"
+                                    {...form.register('weight', {
+                                        setValueAs: (v) => (v === '' || v === null || v === undefined ? null : Number(v)),
+                                    })}
+                                    disabled={isSubmitting}
+                                    aria-invalid={!!form.formState.errors.weight}
+                                />
+                                {form.formState.errors.weight && (
+                                    <FieldError>{form.formState.errors.weight.message}</FieldError>
+                                )}
+                            </Field>
+                        </div>
 
 
                         <Field>
