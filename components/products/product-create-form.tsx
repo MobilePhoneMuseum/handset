@@ -42,6 +42,7 @@ import {productFormSchema, type ProductFormValues,} from '@/lib/validations/prod
 import {type ModelItem, ModelSelectOrCreate,} from '@/components/products/model-select-or-create';
 import {type DonorItem, DonorSelectOrCreate,} from '@/components/products/donor-select-or-create';
 import {ProductImageCapture} from '@/components/products/product-image-capture';
+import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip";
 
 export interface CreatedProductItem {
     id: string;
@@ -267,22 +268,30 @@ export function ProductCreateForm() {
                             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                                 <Field>
                                     <FieldLabel>IMEI / Serial Number</FieldLabel>
-                                    <Input
-                                        placeholder="e.g. 352093008355021"
-                                        {...form.register('imei')}
-                                        className="font-mono"
-                                        disabled={isSubmitting}
-                                        aria-invalid={!!form.formState.errors.imei}
-                                        onKeyDown={(e) => {
-                                            if (e.key === 'Enter') {
-                                                // Barcode scanners love to press Enter once they've scanned a barcode, which would submit the form.
-                                                e.stopPropagation();
-                                            }
-                                        }}
-                                    />
-                                    {form.formState.errors.imei && (
-                                        <FieldError>{form.formState.errors.imei.message}</FieldError>
-                                    )}
+                                    <Tooltip>
+                                        <TooltipTrigger>
+                                            <Input
+                                                placeholder="e.g. 352093008355021"
+                                                {...form.register('imei')}
+                                                className="font-mono"
+                                                disabled={isSubmitting}
+                                                aria-invalid={!!form.formState.errors.imei}
+                                                onKeyDown={(e) => {
+                                                    if (e.key === 'Enter') {
+                                                        // Barcode scanners love to press Enter once they've scanned a barcode, which would submit the form.
+                                                        e.stopPropagation();
+                                                    }
+                                                }}
+                                            />
+                                            {form.formState.errors.imei && (
+                                                <FieldError>{form.formState.errors.imei.message}</FieldError>
+                                            )}
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                            <p>Tip: You can use a barcode scanner here!</p>
+                                        </TooltipContent>
+                                    </Tooltip>
+
                                 </Field>
 
                                 <Field>
