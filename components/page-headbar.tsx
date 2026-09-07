@@ -10,7 +10,6 @@ interface HeadbarProps {
 }
 
 export default function pageHeadbar({
-                                        className,
                                         icon,
                                         iconClassName,
                                         title,

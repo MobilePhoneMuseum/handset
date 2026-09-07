@@ -14,7 +14,7 @@ const RefreshTokenHandler = (props: RefreshTokenHandlerProps) => {
             const timeRemaining = Math.round((((session.expires_at ?? 0 - 60000) - Date.now()) / 1000));
             props.setInterval(timeRemaining > 0 ? timeRemaining : 0);
         }
-    }, [session]);
+    }, [props, session]);
 
     return null;
 }

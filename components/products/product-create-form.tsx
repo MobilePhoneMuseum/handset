@@ -189,12 +189,12 @@ export function ProductCreateForm() {
     return (
         <div className="w-full max-w-6xl space-y-6">
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                {/* Section 1: Catalog Model Selection */}
+                {/* Section 1: Model */}
                 <Card className="rounded-none border-border shadow-xs overflow-visible relative z-30">
                     <CardHeader className="pb-3">
                         <CardTitle className="flex items-center gap-2 text-base font-semibold">
                             <HugeiconsIcon icon={FlipPhoneIcon} className="size-4 text-primary"/>
-                            Phone Model
+                            Model
                             <span className="text-destructive">*</span>
                         </CardTitle>
                         <CardDescription>
@@ -214,7 +214,7 @@ export function ProductCreateForm() {
                     </CardContent>
                 </Card>
 
-                {/* Section 2: Acquisition & Donor Details */}
+                {/* Section 2: Donor */}
                 <Card className="rounded-none border-border shadow-xs overflow-visible relative z-20">
                     <CardHeader className="pb-3">
                         <CardTitle className="flex items-center gap-2 text-base font-semibold">
@@ -228,7 +228,6 @@ export function ProductCreateForm() {
                     <CardContent className="space-y-4">
                         <FieldGroup className="gap-4">
                             <Field>
-                                <FieldLabel>Donated By (Optional)</FieldLabel>
                                 <DonorSelectOrCreate
                                     value={form.watch('donor_id')}
                                     onChange={handleDonorChange}
@@ -241,7 +240,7 @@ export function ProductCreateForm() {
                     </CardContent>
                 </Card>
 
-                {/* Section 3: Physical Device Attributes */}
+                {/* Section 3: Product */}
                 <Card className="rounded-none border-border shadow-xs overflow-visible relative z-10">
                     <CardHeader className="pb-3">
                         <CardTitle className="flex items-center gap-2 text-base font-semibold">
