@@ -1,4 +1,14 @@
-import {authentication, createDirectus, graphql, rest, staticToken,} from "@directus/sdk"
+import {authentication, createDirectus, graphql, rest, staticToken, uploadFiles,} from "@directus/sdk"
+
+export interface DirectusUploadedFile {
+    id: string;
+    title?: string | null;
+    filename_download?: string | null;
+    type?: string | null;
+    filesize?: number | null;
+
+    [key: string]: unknown;
+}
 
 export const directus = (token: string = "") => {
     if (token) {
@@ -41,5 +51,27 @@ export const login = async ({
     }
     if (res.ok && user) {
         return user?.data
+    }
+}
+
+export const uploadDirectusFile = async (
+    token: string,
+    file: Blob | File,
+    filename: string = "product-photo.jpg"
+): Promise<DirectusUploadedFile> => {
+    if (!token) {
+        throw new Error("Authentication token is required to upload files to Directus")
+    }
+    const client = directus(token)
+    const formData = new FormData()
+    formData.append("file", file, filename)
+    try {
+        const result = await client.request(uploadFiles(formData))
+        return result as DirectusUploadedFile
+    } catch (err: unknown) {
+        if (err instanceof Error) {
+            throw err
+        }
+        throw new Error("Failed to upload file to Directus")
     }
 }

@@ -71,6 +71,9 @@ export const CREATE_PRODUCT = gql`
             description
             note
             status
+            image_front {
+                id
+            }
             model_id {
                 id
                 name

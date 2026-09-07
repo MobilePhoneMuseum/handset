@@ -20,6 +20,7 @@ export const productFormSchema = z.object({
     description: z.string().max(500, 'Description must be 500 characters or less').optional(),
     note: z.string().max(1000, 'Note must be 1000 characters or less').optional(),
     status: z.enum(['draft', 'published', 'archived']),
+    image_id: z.string().optional(),
 });
 
 export type ProductFormValues = z.infer<typeof productFormSchema>;

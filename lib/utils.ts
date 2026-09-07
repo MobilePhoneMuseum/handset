@@ -32,3 +32,21 @@ export function escapeXml(unsafe: string): string {
         }
     });
 }
+
+/**
+ * Convert a base64 Data URI string (e.g. from react-webcam) to a binary Blob.
+ * @param dataURI Base64 data URI string
+ * @returns Blob representing the image binary data
+ */
+export function dataURItoBlob(dataURI: string): Blob {
+    const parts = dataURI.split(',');
+    const byteString = atob(parts[1]);
+    const mimeMatch = parts[0].match(/:(.*?);/);
+    const mimeString = mimeMatch ? mimeMatch[1] : 'image/jpeg';
+    const ab = new ArrayBuffer(byteString.length);
+    const ia = new Uint8Array(ab);
+    for (let i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+    }
+    return new Blob([ab], {type: mimeString});
+}

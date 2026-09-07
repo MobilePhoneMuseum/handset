@@ -32,6 +32,8 @@ import {CREATE_DONOR, SEARCH_DONORS,} from '@/app/products/new/queries';
 import {donorFormSchema, type DonorFormValues, slugify,} from '@/lib/validations/product';
 import {Donor} from "@/types/gql/graphql";
 
+export type DonorItem = Donor;
+
 interface DonorSelectOrCreateProps {
     value?: string;
     onChange: (value: string, donor?: Donor | null) => void;

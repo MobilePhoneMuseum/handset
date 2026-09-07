@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import {useRouter} from 'next/navigation';
+import {useSession} from 'next-auth/react';
 import {useMutation} from '@apollo/client/react';
 import {useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
@@ -10,6 +11,7 @@ import {
     Add01Icon,
     ArrowLeft01Icon,
     BoxIcon,
+    Camera01Icon,
     CheckmarkCircle02Icon,
     FlipPhoneIcon,
     Loading03Icon,
@@ -39,6 +41,7 @@ import {CREATE_PRODUCT} from '@/app/products/new/queries';
 import {productFormSchema, type ProductFormValues,} from '@/lib/validations/product';
 import {type ModelItem, ModelSelectOrCreate,} from '@/components/products/model-select-or-create';
 import {type DonorItem, DonorSelectOrCreate,} from '@/components/products/donor-select-or-create';
+import {ProductImageCapture} from '@/components/products/product-image-capture';
 
 export interface CreatedProductItem {
     id: string;
@@ -46,6 +49,9 @@ export interface CreatedProductItem {
     description?: string | null;
     note?: string | null;
     status?: string | null;
+    image_front?: {
+        id: string;
+    } | null;
     model_id?: {
         id: string;
         name?: string | null;
@@ -71,6 +77,7 @@ const statusItems = {
 
 export function ProductCreateForm() {
     const router = useRouter();
+    const {data: session} = useSession();
     const {isConnected, isPrinting, printProductLabel} = usePrinter();
 
     const [selectedModel, setSelectedModel] = React.useState<ModelItem | null>(null);
@@ -91,6 +98,7 @@ export function ProductCreateForm() {
             description: '',
             note: '',
             status: 'published',
+            image_id: '',
         },
     });
 
@@ -115,6 +123,7 @@ export function ProductCreateForm() {
                         description: values.description?.trim() || undefined,
                         note: values.note?.trim() || undefined,
                         status: values.status,
+                        image_front: values.image_id ? {id: values.image_id} : undefined,
                     },
                 },
             });
@@ -183,6 +192,7 @@ export function ProductCreateForm() {
             description: '',
             note: '',
             status: 'draft',
+            image_id: '',
         });
     };
 
@@ -328,6 +338,27 @@ export function ProductCreateForm() {
                     </CardContent>
                 </Card>
 
+                {/* Section 4: Specimen Photography */}
+                <Card className="rounded-none border-border shadow-xs overflow-visible relative z-0">
+                    <CardHeader className="pb-3">
+                        <CardTitle className="flex items-center gap-2 text-base font-semibold">
+                            <HugeiconsIcon icon={Camera01Icon} className="size-4 text-primary"/>
+                            Reference Photo
+                        </CardTitle>
+                        <CardDescription>
+                            Capture or upload a reference photo.
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <ProductImageCapture
+                            accessToken={session?.access_token}
+                            value={form.watch('image_id')}
+                            onChange={(fileId) => form.setValue('image_id', fileId || '', {shouldValidate: true})}
+                            disabled={isSubmitting}
+                        />
+                    </CardContent>
+                </Card>
+
                 {/* Submit Actions */}
                 <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between pt-2">
                     <Button
@@ -399,6 +430,16 @@ export function ProductCreateForm() {
                                     {createdProduct.status || 'draft'}
                                 </Badge>
                             </div>
+                            {createdProduct.image_front?.id && (
+                                <div className="flex items-center justify-between">
+                                    <span className="text-muted-foreground">Photo Attached:</span>
+                                    <span
+                                        className="font-mono text-xs text-emerald-600 flex items-center gap-1 font-medium">
+                                        <HugeiconsIcon icon={CheckmarkCircle02Icon} className="size-3.5"/>
+                                        #{createdProduct.image_front.id}
+                                    </span>
+                                </div>
+                            )}
                         </div>
                     )}
 
