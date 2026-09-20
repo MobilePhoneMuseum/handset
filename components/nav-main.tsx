@@ -24,14 +24,16 @@ export function NavMain({
         <SidebarGroup>
             <SidebarGroupContent className="flex flex-col gap-2">
                 <SidebarMenu>
-                    <SidebarMenuItem className="flex items-center gap-2">
-                        <SidebarMenuButton
-                            tooltip="Quick Create"
-                            className="min-w-8 bg-primary text-primary-foreground duration-200 ease-linear hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground"
-                        >
-                            <HugeiconsIcon icon={PlusSignCircleIcon} strokeWidth={2}/>
-                            <span>Quick Create</span>
-                        </SidebarMenuButton>
+                    <SidebarMenuItem>
+                        <Link href="/products/new">
+                            <SidebarMenuButton
+                                tooltip="Quickly create a new Product"
+                                className="min-w-8 bg-primary text-primary-foreground duration-200 ease-linear hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground"
+                            >
+                                <HugeiconsIcon icon={PlusSignCircleIcon} strokeWidth={2}/>
+                                <span>New Product</span>
+                            </SidebarMenuButton>
+                        </Link>
                     </SidebarMenuItem>
                 </SidebarMenu>
                 <SidebarMenu>

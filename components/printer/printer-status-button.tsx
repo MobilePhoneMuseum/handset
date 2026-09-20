@@ -2,11 +2,10 @@
 
 import React, {useState} from 'react';
 import {usePrinter} from '@/hooks/use-printer';
-import {Button} from '@/components/ui/button';
 import {PrinterSettingsDialog} from './printer-settings-dialog';
 import {HugeiconsIcon} from '@hugeicons/react';
 import {PrinterIcon} from '@hugeicons/core-free-icons';
-import {SidebarMenuButton, SidebarMenuItem} from "@/components/ui/sidebar";
+import {SidebarMenuBadge, SidebarMenuButton, SidebarMenuItem} from "@/components/ui/sidebar";
 
 export function PrinterStatusButton() {
     const {isSupported, isConnected, isPrinting} = usePrinter();
@@ -17,7 +16,7 @@ export function PrinterStatusButton() {
             <SidebarMenuItem key="printer">
                 <SidebarMenuButton onClick={() => setOpen(true)}>
                     <HugeiconsIcon icon={PrinterIcon} className="size-4"/>
-                    <span className="hidden sm:inline">Label Printing</span>
+                    <span className="inline">Label Printing</span>
                     <span
                         className={`size-2 rounded-full ${
                             !isSupported
@@ -29,21 +28,12 @@ export function PrinterStatusButton() {
                                     : 'bg-muted-foreground/40'
                         }`}
                     />
-                    <Button
-                        variant="ghost"
-                        size="sm"
+                    <SidebarMenuBadge
                         onClick={() => setOpen(true)}
                         className="relative h-8 gap-1.5 px-2.5 text-xs"
-                        title={
-                            !isSupported
-                                ? 'WebUSB printer not supported'
-                                : isConnected
-                                    ? 'Printer connected'
-                                    : 'Printer disconnected'
-                        }
                     >
 
-                    </Button>
+                    </SidebarMenuBadge>
                 </SidebarMenuButton>
             </SidebarMenuItem>
 

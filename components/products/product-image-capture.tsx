@@ -334,11 +334,6 @@ export function ProductImageCapture({
                             }}
                             className="w-full h-full object-contain"
                         />
-                        <div className="absolute top-2 right-2 flex items-center gap-1.5">
-                            <Badge variant="secondary" className="bg-background/80 backdrop-blur-xs text-[10px]">
-                                Live Feed
-                            </Badge>
-                        </div>
                     </div>
 
                     <div className="flex flex-wrap items-center justify-between gap-2">

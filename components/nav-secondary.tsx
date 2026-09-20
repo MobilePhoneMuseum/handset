@@ -2,7 +2,7 @@
 
 import * as React from "react"
 
-import {SidebarGroup, SidebarGroupContent, SidebarMenu,} from "@/components/ui/sidebar"
+import {SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu,} from "@/components/ui/sidebar"
 import {PrinterStatusButton} from "@/components/printer/printer-status-button";
 
 export function NavSecondary({
@@ -10,6 +10,7 @@ export function NavSecondary({
                              }) {
     return (
         <SidebarGroup {...props}>
+            <SidebarGroupLabel>Configuration</SidebarGroupLabel>
             <SidebarGroupContent>
                 <SidebarMenu>
                     <PrinterStatusButton/>

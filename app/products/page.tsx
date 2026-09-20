@@ -124,7 +124,7 @@ export default function Page() {
         if (!isConnected) {
             toast.add({
                 type: 'error',
-                description: 'Printer is not connected. Please connect via printer settings in the header.'
+                description: 'Printer is not connected. Please connect via printer settings in the sidebar.'
             });
             return;
         }
@@ -149,14 +149,14 @@ export default function Page() {
     return (
         <>
             <PageHeadbar title="Library Products" icon={<HugeiconsIcon icon={BoxIcon}/>}>
-        <span className="ml-3">
-          <Link href="/products/new">
-            <Button>
-              <HugeiconsIcon icon={WandSparkles}/>
-              Create New
-            </Button>
-          </Link>
-        </span>
+                <span className="ml-3">
+                  <Link href="/products/new">
+                    <Button>
+                      <HugeiconsIcon icon={WandSparkles}/>
+                      Create New
+                    </Button>
+                  </Link>
+                </span>
             </PageHeadbar>
 
             <div>

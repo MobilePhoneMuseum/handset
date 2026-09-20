@@ -9,6 +9,7 @@ import PageHeadbar from '@/components/page-headbar';
 import {Button} from '@/components/ui/button';
 import {ProductCreateForm} from '@/components/products/product-create-form';
 
+
 export default function NewProductPage() {
     return (
         <div className="space-y-6 pb-12">

@@ -22,7 +22,6 @@ import {
 import {Button} from '@/components/ui/button';
 import {Input} from '@/components/ui/input';
 import {Textarea} from '@/components/ui/textarea';
-import {Badge} from '@/components/ui/badge';
 import {Card, CardContent, CardDescription, CardHeader, CardTitle,} from '@/components/ui/card';
 import {
     Dialog,
@@ -198,7 +197,7 @@ export function ProductCreateForm() {
             imei: '',
             description: '',
             note: '',
-            status: 'draft',
+            status: 'published',
             image_reference: null,
         });
     };
@@ -421,44 +420,46 @@ export function ProductCreateForm() {
                         </DialogDescription>
                     </DialogHeader>
 
-                    {createdProduct && (
-                        <div className="space-y-3 rounded border border-border bg-muted/40 p-3 text-sm">
-                            <div className="flex items-center justify-between">
-                                <span className="text-muted-foreground">Product ID:</span>
-                                <span className="font-mono font-medium">#{createdProduct.id}</span>
-                            </div>
-                            <div className="flex items-center justify-between">
-                                <span className="text-muted-foreground">Model:</span>
-                                <span className="font-medium">
-                                    {createdProduct.model_id?.brand_id?.name ? `${createdProduct.model_id.brand_id.name} ` : ''}
-                                    {createdProduct.model_id?.name || createdProduct.model_id?.display_name || '—'}
-                                </span>
-                            </div>
-                            {createdProduct.imei && (
-                                <div className="flex items-center justify-between">
-                                    <span className="text-muted-foreground">IMEI / Serial:</span>
-                                    <span className="font-mono text-xs">{createdProduct.imei}</span>
-                                </div>
-                            )}
-                            <div className="flex items-center justify-between">
-                                <span className="text-muted-foreground">Status:</span>
-                                <Badge variant={createdProduct.status === 'published' ? 'default' : 'secondary'}>
-                                    {createdProduct.status || 'draft'}
-                                </Badge>
-                            </div>
-                            {createdProduct.image_reference?.id && (
-                                <div className="flex items-center justify-between">
-                                    <span className="text-muted-foreground">Photo Attached:</span>
-                                    <span
-                                        className="font-mono text-xs text-emerald-600 flex items-center gap-1 font-medium">
-                                        <HugeiconsIcon icon={CheckmarkCircle02Icon} className="size-3.5"/>
-                                        #{createdProduct.image_reference.id}
-                                    </span>
-                                </div>
-                            )}
-                        </div>
-                    )}
-
+                    {/*{createdProduct && (*/}
+                    {/*    <div className="space-y-3 rounded border border-border bg-muted/40 p-3 text-sm">*/}
+                    {/*        <div className="flex items-center justify-between">*/}
+                    {/*            <span className="text-muted-foreground">Product ID:</span>*/}
+                    {/*            <span className="font-mono font-medium">#{createdProduct.id}</span>*/}
+                    {/*        </div>*/}
+                    {/*        <div className="flex items-center justify-between">*/}
+                    {/*            <span className="text-muted-foreground">Model:</span>*/}
+                    {/*            <span className="font-medium">*/}
+                    {/*                {createdProduct.model_id?.brand_id?.name ? `${createdProduct.model_id.brand_id.name} ` : ''}*/}
+                    {/*                {createdProduct.model_id?.name || createdProduct.model_id?.display_name || '—'}*/}
+                    {/*            </span>*/}
+                    {/*        </div>*/}
+                    {/*        {createdProduct.imei && (*/}
+                    {/*            <div className="flex items-center justify-between">*/}
+                    {/*                <span className="text-muted-foreground">IMEI / Serial:</span>*/}
+                    {/*                <span className="font-mono text-xs">{createdProduct.imei}</span>*/}
+                    {/*            </div>*/}
+                    {/*        )}*/}
+                    {/*        <div className="flex items-center justify-between">*/}
+                    {/*            <span className="text-muted-foreground">Status:</span>*/}
+                    {/*            <Badge variant={createdProduct.status === 'published' ? 'default' : 'secondary'}>*/}
+                    {/*                {createdProduct.status || 'draft'}*/}
+                    {/*            </Badge>*/}
+                    {/*        </div>*/}
+                    {/*        {createdProduct.image_reference?.id && (*/}
+                    {/*            <div className="flex items-center justify-between">*/}
+                    {/*                <span className="text-muted-foreground">Photo Attached:</span>*/}
+                    {/*                <span*/}
+                    {/*                    className="font-mono text-xs text-emerald-600 flex items-center gap-1 font-medium">*/}
+                    {/*                    <HugeiconsIcon icon={CheckmarkCircle02Icon} className="size-3.5"/>*/}
+                    {/*                    #{createdProduct.image_reference.id}*/}
+                    {/*                </span>*/}
+                    {/*            </div>*/}
+                    {/*        )}*/}
+                    {/*    </div>*/}
+                    {/*)}*/}
+                    <div className="text-2xl font-heading">
+                        What Next?
+                    </div>
                     <DialogFooter className="flex flex-col sm:flex-row sm:justify-between gap-2 pt-2">
                         <Button
                             type="button"
