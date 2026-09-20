@@ -50,7 +50,7 @@ export interface CreatedProductItem {
     description?: string | null;
     note?: string | null;
     status?: string | null;
-    image_front?: {
+    image_reference?: {
         id: string;
     } | null;
     model_id?: {
@@ -81,8 +81,6 @@ export function ProductCreateForm() {
     const {data: session} = useSession();
     const {isConnected, isPrinting, printProductLabel} = usePrinter();
 
-    const [selectedModel, setSelectedModel] = React.useState<ModelItem | null>(null);
-    const [selectedDonor, setSelectedDonor] = React.useState<DonorItem | null>(null);
     const [createdProduct, setCreatedProduct] = React.useState<CreatedProductItem | null>(null);
     const [isSuccessDialogOpen, setIsSuccessDialogOpen] = React.useState(false);
 
@@ -93,38 +91,48 @@ export function ProductCreateForm() {
     const form = useForm<ProductFormValues>({
         resolver: zodResolver(productFormSchema),
         defaultValues: {
-            model_id: '',
-            donor_id: '',
+            model: null,
+            donor_id: null,
             imei: '',
             description: '',
             note: '',
             status: 'published',
-            image_id: '',
+            image_reference: null,
         },
     });
 
-    const handleModelChange = (modelId: string, model?: ModelItem | null) => {
-        form.setValue('model_id', modelId, {shouldValidate: true});
-        setSelectedModel(model || null);
+    const selectedModel = form.watch('model') as ModelItem | null;
+    const selectedDonor = form.watch('donor_id') as DonorItem | null;
+
+    const handleModelChange = (_modelId: string, model?: ModelItem | null) => {
+        form.setValue('model', model || null, {shouldValidate: true});
     };
 
-    const handleDonorChange = (donorId: string, donor?: DonorItem | null) => {
-        form.setValue('donor_id', donorId, {shouldValidate: true});
-        setSelectedDonor(donor || null);
+    const handleDonorChange = (_donorId: string, donor?: DonorItem | null) => {
+        form.setValue('donor_id', donor || null, {shouldValidate: true});
     };
 
     const onSubmit = async (values: ProductFormValues) => {
+        if (!values.model) return;
         try {
             const res = await createProduct({
                 variables: {
                     data: {
-                        model_id: {id: values.model_id},
-                        donor_id: values.donor_id ? {id: values.donor_id} : undefined,
+                        // "Why on earth are we passing slug through?", you ask -
+                        // it's because the GraphQL API requires it as it's a mandatory field.
+                        // This can be removed if (when) we change to the REST API instead.
+                        model_id: {id: values.model.id, slug: values.model.slug},
+                        donor_id: values.donor_id ? {id: values.donor_id.id} : undefined,
                         imei: values.imei?.trim() || undefined,
                         description: values.description?.trim() || undefined,
                         note: values.note?.trim() || undefined,
                         status: values.status,
-                        image_front: values.image_id ? {id: values.image_id} : undefined,
+                        // Same stupidity here
+                        image_reference: values.image_reference ? {
+                            id: values.image_reference.id,
+                            storage: values.image_reference.storage,
+                            filename_download: values.image_reference.filename_download
+                        } : undefined,
                     },
                 },
             });
@@ -152,7 +160,7 @@ export function ProductCreateForm() {
         if (!isConnected) {
             toast.add({
                 type: 'error',
-                description: 'Printer is not connected. Please connect your USB label printer in the top bar.',
+                description: 'Printer is not connected. Please connect your USB label printer through the sidebar.',
             });
             return;
         }
@@ -184,16 +192,14 @@ export function ProductCreateForm() {
     const handleCreateAnother = () => {
         setIsSuccessDialogOpen(false);
         setCreatedProduct(null);
-        setSelectedModel(null);
-        setSelectedDonor(null);
         form.reset({
-            model_id: '',
-            donor_id: '',
+            model: null,
+            donor_id: null,
             imei: '',
             description: '',
             note: '',
             status: 'draft',
-            image_id: '',
+            image_reference: null,
         });
     };
 
@@ -215,11 +221,11 @@ export function ProductCreateForm() {
                     <CardContent>
                         <Field>
                             <ModelSelectOrCreate
-                                value={form.watch('model_id')}
+                                value={selectedModel?.id}
                                 onChange={handleModelChange}
                                 selectedModel={selectedModel}
                                 disabled={isSubmitting}
-                                error={form.formState.errors.model_id?.message}
+                                error={form.formState.errors.model?.message as string | undefined}
                             />
                         </Field>
                     </CardContent>
@@ -240,11 +246,11 @@ export function ProductCreateForm() {
                         <FieldGroup className="gap-4">
                             <Field>
                                 <DonorSelectOrCreate
-                                    value={form.watch('donor_id')}
+                                    value={selectedDonor?.id}
                                     onChange={handleDonorChange}
                                     selectedDonor={selectedDonor}
                                     disabled={isSubmitting}
-                                    error={form.formState.errors.donor_id?.message}
+                                    error={form.formState.errors.donor_id?.message as string | undefined}
                                 />
                             </Field>
                         </FieldGroup>
@@ -280,6 +286,7 @@ export function ProductCreateForm() {
                                                     if (e.key === 'Enter') {
                                                         // Barcode scanners love to press Enter once they've scanned a barcode, which would submit the form.
                                                         e.stopPropagation();
+                                                        e.preventDefault();
                                                     }
                                                 }}
                                             />
@@ -361,8 +368,8 @@ export function ProductCreateForm() {
                     <CardContent>
                         <ProductImageCapture
                             accessToken={session?.access_token}
-                            value={form.watch('image_id')}
-                            onChange={(fileId) => form.setValue('image_id', fileId || '', {shouldValidate: true})}
+                            value={form.watch('image_reference')}
+                            onChange={(file) => form.setValue('image_reference', file || null, {shouldValidate: true})}
                             disabled={isSubmitting}
                         />
                     </CardContent>
@@ -439,13 +446,13 @@ export function ProductCreateForm() {
                                     {createdProduct.status || 'draft'}
                                 </Badge>
                             </div>
-                            {createdProduct.image_front?.id && (
+                            {createdProduct.image_reference?.id && (
                                 <div className="flex items-center justify-between">
                                     <span className="text-muted-foreground">Photo Attached:</span>
                                     <span
                                         className="font-mono text-xs text-emerald-600 flex items-center gap-1 font-medium">
                                         <HugeiconsIcon icon={CheckmarkCircle02Icon} className="size-3.5"/>
-                                        #{createdProduct.image_front.id}
+                                        #{createdProduct.image_reference.id}
                                     </span>
                                 </div>
                             )}
@@ -465,7 +472,7 @@ export function ProductCreateForm() {
                             ) : (
                                 <HugeiconsIcon icon={PrinterIcon} className="size-4"/>
                             )}
-                            Print Label
+                            Print 2x Labels
                         </Button>
 
                         <div className="flex items-center gap-2">
@@ -482,7 +489,8 @@ export function ProductCreateForm() {
                                 type="button"
                                 onClick={() => router.push('/products')}
                             >
-                                Done
+                                <HugeiconsIcon icon={BoxIcon} className="size-3.5"/>
+                                Back to Products
                             </Button>
                         </div>
                     </DialogFooter>

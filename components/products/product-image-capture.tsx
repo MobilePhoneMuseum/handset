@@ -18,12 +18,12 @@ import {Badge} from '@/components/ui/badge';
 import {Alert, AlertDescription, AlertTitle} from '@/components/ui/alert';
 import {toast} from '@/components/ui/toast';
 import {dataURItoBlob} from '@/lib/utils';
-import {uploadDirectusFile} from '@/services/directus';
+import {type DirectusUploadedFile, uploadDirectusFile} from '@/services/directus';
 
 export interface ProductImageCaptureProps {
     accessToken?: string;
-    value?: string;
-    onChange: (fileId?: string) => void;
+    value?: DirectusUploadedFile | { id?: string } | string | null;
+    onChange: (file?: DirectusUploadedFile | null) => void;
     disabled?: boolean;
 }
 
@@ -106,11 +106,11 @@ export function ProductImageCapture({
 
                 const uploaded = await toast.promise(uploadPromise, {
                     loading: 'Uploading image to Directus...',
-                    success: (file) => `Image uploaded successfully (File #${file.id})`,
+                    success: (file) => `Image uploaded successfully.`,
                     error: (err: unknown) => (err instanceof Error ? err.message : 'Failed to upload image to Directus'),
                 });
 
-                onChange(uploaded.id);
+                onChange(uploaded);
             } catch (err: unknown) {
                 const msg = err instanceof Error ? err.message : 'Failed to upload image to Directus';
                 setUploadError(msg);
@@ -131,7 +131,7 @@ export function ProductImageCapture({
             setCapturedDataUrl(imageSrc);
             setIsCameraActive(false);
             const blob = dataURItoBlob(imageSrc);
-            const filename = `product-capture-${Date.now()}.jpg`;
+            const filename = `product-ref-${Date.now()}.jpg`;
             handleUpload(blob, filename);
         }
     }, [webcamRef, handleUpload]);
@@ -158,7 +158,8 @@ export function ProductImageCapture({
                 setCapturedDataUrl(dataUrl);
                 setIsCameraActive(false);
                 setCameraError(null);
-                handleUpload(file, file.name || `product-upload-${Date.now()}.jpg`);
+                const filename = `product-ref-${Date.now()}.jpg`;
+                handleUpload(file, filename);
             };
             reader.readAsDataURL(file);
         },
@@ -179,7 +180,7 @@ export function ProductImageCapture({
         setCapturedDataUrl(null);
         setUploadError(null);
         setLastUploadPayload(null);
-        onChange(undefined);
+        onChange(null);
         setIsCameraActive(true);
     };
 
@@ -188,7 +189,7 @@ export function ProductImageCapture({
         setUploadError(null);
         setLastUploadPayload(null);
         setIsCameraActive(false);
-        onChange(undefined);
+        onChange(null);
     };
 
     const toggleFacingMode = () => {
@@ -440,7 +441,7 @@ export function ProductImageCapture({
                     <div className="flex items-center justify-between gap-2">
                         <div className="flex items-center gap-2">
                             <span className="text-xs text-muted-foreground">
-                                {value ? `Directus File ID: ${value}` : isUploading ? 'Uploading file...' : 'Image captured'}
+                                {value ? null : isUploading ? 'Uploading file...' : 'Image captured'}
                             </span>
                         </div>
 

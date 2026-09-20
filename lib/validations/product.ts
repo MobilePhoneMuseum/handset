@@ -13,14 +13,29 @@ export function slugify(text: string): string {
         .replace(/-+$/, ''); // Trim - from end of text
 }
 
+export const productModelFormSchema = z.looseObject({
+    id: z.string().min(1, 'Model is required'),
+    slug: z.string().min(1, 'Slug is required (for some reason)'),
+});
+
+export const productDonorFormSchema = z.looseObject({
+    id: z.string(),
+});
+
+export const productImageFormSchema = z.looseObject({
+    id: z.string(),
+});
+
 export const productFormSchema = z.object({
-    model_id: z.string().min(1, 'Model is required'),
-    donor_id: z.string().optional(),
+    model: productModelFormSchema.nullable().refine((val) => val !== null && !!val.id, {
+        message: 'Model is required',
+    }),
+    donor_id: productDonorFormSchema.nullable().optional(),
     imei: z.string().max(64, 'IMEI/Serial must be 64 characters or less').optional(),
     description: z.string().max(500, 'Description must be 500 characters or less').optional(),
     note: z.string().max(1000, 'Note must be 1000 characters or less').optional(),
     status: z.enum(['draft', 'published', 'archived']),
-    image_id: z.string().optional(),
+    image_reference: productImageFormSchema.nullable().optional(),
 });
 
 export type ProductFormValues = z.infer<typeof productFormSchema>;
