@@ -9,13 +9,13 @@ import {zodResolver} from '@hookform/resolvers/zod';
 import {HugeiconsIcon} from '@hugeicons/react';
 import {
     Add01Icon,
-    ArrowLeft01Icon,
     BoxIcon,
     Camera01Icon,
     CheckmarkCircle02Icon,
     FlipPhoneIcon,
     Loading03Icon,
     PrinterIcon,
+    PrinterXIcon,
     UserIcon,
 } from '@hugeicons/core-free-icons';
 
@@ -42,6 +42,9 @@ import {type ModelItem, ModelSelectOrCreate,} from '@/components/products/model-
 import {type DonorItem, DonorSelectOrCreate,} from '@/components/products/donor-select-or-create';
 import {ProductImageCapture} from '@/components/products/product-image-capture';
 import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip";
+import {ButtonGroup, ButtonGroupText} from "../ui/button-group";
+import {Label} from "@/components/ui/label";
+import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
 
 export interface CreatedProductItem {
     id: string;
@@ -154,7 +157,7 @@ export function ProductCreateForm() {
         }
     };
 
-    const handlePrintCreatedLabel = async () => {
+    const handlePrintCreatedLabel = async (copies: number) => {
         if (!createdProduct) return;
         if (!isConnected) {
             toast.add({
@@ -167,12 +170,12 @@ export function ProductCreateForm() {
         try {
             const ok = await printProductLabel(createdProduct as unknown as Product, {
                 labelSize: 'small_47x20',
-                copies: 2,
+                copies: copies,
             });
             if (ok) {
                 toast.add({
                     type: 'success',
-                    description: `Printed labels for product #${createdProduct.id}`,
+                    description: `Labels printed.`,
                 });
             } else {
                 toast.add({
@@ -200,10 +203,19 @@ export function ProductCreateForm() {
             status: 'published',
             image_reference: null,
         });
+        // Scroll back to the top of the form, ready for the next one.
+        window.scrollTo(0, 0);
     };
 
     return (
         <div className="w-full max-w-6xl space-y-6">
+            <Alert
+                className="border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-50 after:bg-amber-500">
+                <HugeiconsIcon icon={PrinterXIcon} strokeWidth={2}/>
+                <AlertTitle>Printer Missing in Action</AlertTitle>
+                <AlertDescription>You don&#39;t seem to have a label printer connected. While you can still create new
+                    Products, we strongly recommend you connect a label printer before continuing.</AlertDescription>
+            </Alert>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                 {/* Section 1: Model */}
                 <Card className="rounded-none border-border shadow-xs overflow-visible relative z-30">
@@ -375,18 +387,7 @@ export function ProductCreateForm() {
                 </Card>
 
                 {/* Submit Actions */}
-                <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between pt-2">
-                    <Button
-                        type="button"
-                        variant="outline"
-                        onClick={() => router.push('/products')}
-                        disabled={isSubmitting}
-                        className="gap-2"
-                    >
-                        <HugeiconsIcon icon={ArrowLeft01Icon} className="size-4"/>
-                        Cancel
-                    </Button>
-
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center justify-end pt-2">
                     <Button
                         type="submit"
                         disabled={isSubmitting}
@@ -409,14 +410,14 @@ export function ProductCreateForm() {
 
             {/* Post-Creation Success Dialog */}
             <Dialog open={isSuccessDialogOpen} onOpenChange={setIsSuccessDialogOpen}>
-                <DialogContent className="sm:max-w-md">
+                <DialogContent className="sm:max-w-xl">
                     <DialogHeader>
                         <DialogTitle className="flex items-center gap-2 text-primary">
                             <HugeiconsIcon icon={CheckmarkCircle02Icon} className="size-5"/>
-                            Product Registered
+                            Product {createdProduct ? "#" + createdProduct.id : ""} Registered
                         </DialogTitle>
                         <DialogDescription>
-                            The inventory item has been created in Directus.
+                            What would you like to do next?
                         </DialogDescription>
                     </DialogHeader>
 
@@ -457,29 +458,40 @@ export function ProductCreateForm() {
                     {/*        )}*/}
                     {/*    </div>*/}
                     {/*)}*/}
-                    <div className="text-2xl font-heading">
-                        What Next?
-                    </div>
-                    <DialogFooter className="flex flex-col sm:flex-row sm:justify-between gap-2 pt-2">
-                        <Button
-                            type="button"
-                            variant="outline"
-                            onClick={handlePrintCreatedLabel}
-                            disabled={isPrinting}
-                            className="gap-2"
-                        >
-                            {isPrinting ? (
+                    <DialogFooter className="flex flex-col flex-wrap sm:justify-between gap-2">
+                        <ButtonGroup>
+                            <ButtonGroupText render={<Label/>}
+                                             className="border-input">{isPrinting ? (
                                 <HugeiconsIcon icon={Loading03Icon} className="size-4 animate-spin"/>
                             ) : (
                                 <HugeiconsIcon icon={PrinterIcon} className="size-4"/>
                             )}
-                            Print 2x Labels
-                        </Button>
+                                Print Labels:
+                            </ButtonGroupText>
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={() => handlePrintCreatedLabel(1)}
+                                disabled={isPrinting || !isConnected}
+                                className="px-3 bg-secondary"
+                            >
+
+                                1x
+                            </Button>
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={() => handlePrintCreatedLabel(2)}
+                                disabled={isPrinting || !isConnected}
+                                className="px-3 bg-secondary"
+                            >
+                                2x
+                            </Button>
+                        </ButtonGroup>
 
                         <div className="flex items-center gap-2">
                             <Button
                                 type="button"
-                                variant="secondary"
                                 onClick={handleCreateAnother}
                                 className="gap-1"
                             >
@@ -488,10 +500,11 @@ export function ProductCreateForm() {
                             </Button>
                             <Button
                                 type="button"
+                                variant="secondary"
                                 onClick={() => router.push('/products')}
                             >
                                 <HugeiconsIcon icon={BoxIcon} className="size-3.5"/>
-                                Back to Products
+                                Products List
                             </Button>
                         </div>
                     </DialogFooter>

@@ -6,19 +6,19 @@ import {HugeiconsIcon} from '@hugeicons/react';
 import {
     Alert02Icon,
     Camera01Icon,
-    CheckmarkCircle02Icon,
+    CameraSmileIcon,
     Delete02Icon,
     ImageUpload01Icon,
-    Loading03Icon,
     RefreshIcon,
+    SwitchCameraIcon,
 } from '@hugeicons/core-free-icons';
 
 import {Button} from '@/components/ui/button';
-import {Badge} from '@/components/ui/badge';
 import {Alert, AlertDescription, AlertTitle} from '@/components/ui/alert';
 import {toast} from '@/components/ui/toast';
 import {dataURItoBlob} from '@/lib/utils';
 import {type DirectusUploadedFile, uploadDirectusFile} from '@/services/directus';
+import {Label} from "@/components/ui/label";
 
 export interface ProductImageCaptureProps {
     accessToken?: string;
@@ -71,13 +71,17 @@ export function ProductImageCapture({
         [selectedDeviceId]
     );
 
-    React.useEffect(() => {
+    const enumerateDevices = React.useCallback(() => {
         if (typeof navigator !== 'undefined' && navigator.mediaDevices?.enumerateDevices) {
             navigator.mediaDevices.enumerateDevices().then(handleDevices).catch(() => {
                 // Ignore failure to enumerate
             });
         }
     }, [handleDevices]);
+
+    React.useEffect(() => {
+        enumerateDevices();
+    }, [enumerateDevices]);
 
     const handleUpload = React.useCallback(
         async (fileOrBlob: Blob | File, filename: string) => {
@@ -106,7 +110,7 @@ export function ProductImageCapture({
 
                 const uploaded = await toast.promise(uploadPromise, {
                     loading: 'Uploading image to Directus...',
-                    success: (file) => `Image uploaded successfully.`,
+                    success: `Image uploaded successfully.`,
                     error: (err: unknown) => (err instanceof Error ? err.message : 'Failed to upload image to Directus'),
                 });
 
@@ -297,7 +301,7 @@ export function ProductImageCapture({
                             disabled={disabled || isUploading}
                             className="gap-2"
                         >
-                            <HugeiconsIcon icon={Camera01Icon} className="size-4"/>
+                            <HugeiconsIcon icon={CameraSmileIcon} className="size-4"/>
                             Open Camera
                         </Button>
                         <Button
@@ -318,6 +322,9 @@ export function ProductImageCapture({
             {/* Active Live Video Stream */}
             {isCameraActive && !capturedDataUrl && (
                 <div className="space-y-3">
+                    <Label>
+                        {devices[devices.findIndex((d) => d.deviceId === selectedDeviceId)].label}
+                    </Label>
                     <div
                         className="relative overflow-hidden rounded-lg border border-border bg-black aspect-video flex items-center justify-center max-h-80">
                         <Webcam
@@ -350,8 +357,8 @@ export function ProductImageCapture({
                                     }}
                                     className="gap-1.5 text-xs h-8"
                                 >
-                                    <HugeiconsIcon icon={RefreshIcon} className="size-3.5"/>
-                                    Switch Camera
+                                    <HugeiconsIcon icon={SwitchCameraIcon} className="size-3.5"/>
+                                    Switch
                                     ({devices.findIndex((d) => d.deviceId === selectedDeviceId) + 1}/{devices.length})
                                 </Button>
                             ) : (
@@ -362,8 +369,8 @@ export function ProductImageCapture({
                                     onClick={toggleFacingMode}
                                     className="gap-1.5 text-xs h-8"
                                 >
-                                    <HugeiconsIcon icon={RefreshIcon} className="size-3.5"/>
-                                    Facing: {facingMode === 'environment' ? 'Back' : 'Front'}
+                                    <HugeiconsIcon icon={SwitchCameraIcon} className="size-3.5"/>
+                                    Facing {facingMode === 'environment' ? 'Back' : 'Front'}
                                 </Button>
                             )}
 
@@ -371,17 +378,17 @@ export function ProductImageCapture({
                                 type="button"
                                 variant="outline"
                                 size="sm"
-                                onClick={() => fileInputRef.current?.click()}
+                                onClick={enumerateDevices}
                                 disabled={disabled || isUploading}
                                 className="gap-1.5 text-xs h-8"
                             >
-                                <HugeiconsIcon icon={ImageUpload01Icon} className="size-3.5"/>
-                                Upload Image
+                                <HugeiconsIcon icon={RefreshIcon} className="size-3.5"/>
+                                Refresh Cameras
                             </Button>
 
                             <Button
                                 type="button"
-                                variant="ghost"
+                                variant="destructive"
                                 size="sm"
                                 onClick={() => setIsCameraActive(false)}
                                 className="text-xs h-8"
@@ -414,23 +421,6 @@ export function ProductImageCapture({
                             alt="Captured device photo"
                             className="w-full h-full object-contain"
                         />
-
-                        <div className="absolute top-2 right-2 flex items-center gap-1.5">
-                            {isUploading && (
-                                <Badge variant="secondary"
-                                       className="bg-background/90 backdrop-blur-xs text-[10px] gap-1">
-                                    <HugeiconsIcon icon={Loading03Icon} className="size-3 animate-spin text-primary"/>
-                                    Uploading...
-                                </Badge>
-                            )}
-                            {!isUploading && value && (
-                                <Badge variant="default"
-                                       className="bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] gap-1">
-                                    <HugeiconsIcon icon={CheckmarkCircle02Icon} className="size-3"/>
-                                    Uploaded
-                                </Badge>
-                            )}
-                        </div>
                     </div>
 
                     <div className="flex items-center justify-between gap-2">
