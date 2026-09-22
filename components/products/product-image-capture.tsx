@@ -19,6 +19,7 @@ import {toast} from '@/components/ui/toast';
 import {dataURItoBlob} from '@/lib/utils';
 import {type DirectusUploadedFile, uploadDirectusFile} from '@/services/directus';
 import {Label} from "@/components/ui/label";
+import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from "../ui/accordion";
 
 export interface ProductImageCaptureProps {
     accessToken?: string;
@@ -407,6 +408,21 @@ export function ProductImageCapture({
                             Capture Photo
                         </Button>
                     </div>
+                    <Accordion>
+                        <AccordionItem>
+                            <AccordionTrigger> My iPhone Camera
+                                isn&#39;t showing
+                                up!</AccordionTrigger>
+                            <AccordionContent>
+                                Continuity Camera is sometimes a bit picky.
+                                Try making sure it&#39;s in the &#34;magic pose&#34; (landscape, screen off, locked,
+                                motionless
+                                (not handheld), and unobstructed camera), then click Refresh Cameras above and see if it
+                                appears in the list.
+                                Failing that, try connecting it with a USB cable.
+                            </AccordionContent>
+                        </AccordionItem>
+                    </Accordion>
                 </div>
             )}
 
