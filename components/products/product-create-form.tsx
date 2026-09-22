@@ -209,13 +209,13 @@ export function ProductCreateForm() {
 
     return (
         <div className="w-full max-w-6xl space-y-6">
-            <Alert
+            {!isConnected && <Alert
                 className="border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-50 after:bg-amber-500">
                 <HugeiconsIcon icon={PrinterXIcon} strokeWidth={2}/>
                 <AlertTitle>Printer Missing in Action</AlertTitle>
                 <AlertDescription>You don&#39;t seem to have a label printer connected. While you can still create new
                     Products, we strongly recommend you connect a label printer before continuing.</AlertDescription>
-            </Alert>
+            </Alert>}
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                 {/* Section 1: Model */}
                 <Card className="rounded-none border-border shadow-xs overflow-visible relative z-30">

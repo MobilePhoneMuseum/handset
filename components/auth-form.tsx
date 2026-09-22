@@ -8,6 +8,7 @@ import {cn} from "@/lib/utils";
 import {Alert, AlertTitle} from "./ui/alert";
 import {UserWarning01Icon} from "@hugeicons/core-free-icons";
 import {HugeiconsIcon} from "@hugeicons/react";
+import {InputOTP, InputOTPGroup, InputOTPSlot} from "./ui/input-otp";
 
 interface Data {
     email: string;
@@ -91,17 +92,22 @@ export default function AuthForm({
                                        onChange={handleInputChange} required/>
                             </Field>
                             <Field>
-                                <div className="flex items-center">
+                                <div className="flex items-center justify-between">
                                     <FieldLabel htmlFor="otp">OTP</FieldLabel>
                                 </div>
-                                <Input
-                                    type="text"
-                                    placeholder="Optional OTP Token"
-                                    name="otp"
-                                    id="otp"
-                                    value={formData.otp}
-                                    onChange={handleInputChange}
-                                />
+                                <InputOTP maxLength={6} name="otp"
+                                          id="otp"
+                                          value={formData.otp}
+                                          onChange={(value) => setFormData((prev) => ({...prev, otp: value}))}>
+                                    <InputOTPGroup>
+                                        <InputOTPSlot index={0}/>
+                                        <InputOTPSlot index={1}/>
+                                        <InputOTPSlot index={2}/>
+                                        <InputOTPSlot index={3}/>
+                                        <InputOTPSlot index={4}/>
+                                        <InputOTPSlot index={5}/>
+                                    </InputOTPGroup>
+                                </InputOTP>
                             </Field>
                             <Field>
                                 <Button type="submit">Login</Button>
