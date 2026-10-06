@@ -1,11 +1,9 @@
 'use client';
-import {signIn} from 'next-auth/react';
 import {useRouter} from 'next/navigation';
-
 import {useState} from 'react';
 import {toast} from "@/components/ui/toast";
 import AuthForm from "@/components/auth-form";
-
+import {authClient} from "@/lib/auth/auth-client";
 
 interface Data {
     email?: string;
@@ -16,24 +14,47 @@ interface Data {
 export default function LoginForm() {
     const router = useRouter();
     const [error, setError] = useState('');
+    const [showOtp, setShowOtp] = useState(false);
+
     const handleFormSubmit = async (data: Data) => {
         setError('');
         await toast.promise(
             new Promise<{ name: string }>(async (resolve, reject) => {
-                const response = await signIn('credentials', {
-                    email: data.email,
-                    password: data.password,
-                    otp: data.otp,
-                    redirect: false,
-                });
-                if (!response?.error) {
-                    resolve({name: "Log in"})
+                try {
+                    const result = await authClient.signIn.credentials({
+                        email: data.email || '',
+                        password: data.password || '',
+                        otp: data.otp,
+                    });
+
+                    if (result?.error) {
+                        const err = result.error;
+                        const errMsg = err.message || 'Unknown error occurred; please try again';
+                        const errCode = (err as any).code;
+
+                        if (errCode === 'INVALID_OTP') {
+                            setShowOtp(true);
+                        } else {
+                            setError(errMsg);
+                        }
+                        reject(errMsg);
+                        return;
+                    }
+
+                    resolve({name: "Log in"});
+                    await authClient.getSession({query: {disableCookieCache: true}});
                     router.push('/');
                     router.refresh();
-                } else {
-                    const errStr = response.status === 401 ? response.error : 'Unknown error occurred; please try again';
-                    setError(errStr);
-                    reject(errStr);
+                } catch (err: any) {
+                    const errMsg = err?.message || 'Unknown error occurred; please try again';
+                    const errCode = err?.code;
+                    setError(errMsg);
+                    if (errCode === 'INVALID_OTP') {
+                        setShowOtp(true);
+                    } else {
+                        setError(errMsg);
+                    }
+                    reject(errMsg);
                 }
             }),
             {
@@ -41,18 +62,16 @@ export default function LoginForm() {
                 success: "Logged in",
                 error: (err: string) => `Log in failed: ${err}`,
             }
-        )
-
+        );
     };
 
     return (
-        <>
-            <AuthForm
-                title="Login here"
-                error={error}
-                onSubmit={handleFormSubmit}
-                buttonText="Login"
-            />
-        </>
+        <AuthForm
+            title="Login here"
+            error={error}
+            showOtp={showOtp}
+            onSubmit={handleFormSubmit}
+            buttonText={showOtp ? "Verify & Login" : "Login"}
+        />
     );
 }

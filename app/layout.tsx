@@ -5,9 +5,7 @@ import {TooltipProvider} from "@/components/ui/tooltip";
 import {AppSidebar} from "@/components/app-sidebar";
 import {SidebarInset, SidebarProvider} from "@/components/ui/sidebar";
 import {SiteHeader} from "@/components/site-header";
-import {getServerSession} from "next-auth/next";
-import {options} from "@/lib/auth/options";
-import AuthProvider from "@/components/auth-provider";
+import {ThemeProvider} from "@/components/theme-provider";
 import {Toaster} from "@/components/ui/toast";
 import {ApolloWrapper} from "@/app/ApolloWrapper";
 import {PrinterProvider} from "@/components/printer/printer-provider";
@@ -19,7 +17,6 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({children}: LayoutProps<"/">) {
-    const session = await getServerSession(options)
     return (
 
         <html
@@ -31,7 +28,12 @@ export default async function RootLayout({children}: LayoutProps<"/">) {
             <title>Handset</title>
         </head>
         <body className="min-h-full flex flex-col">
-        <AuthProvider session={session}>
+        <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+        >
             <ApolloWrapper>
                 <TooltipProvider>
                     <SidebarProvider
@@ -59,7 +61,7 @@ export default async function RootLayout({children}: LayoutProps<"/">) {
                     </SidebarProvider>
                 </TooltipProvider>
             </ApolloWrapper>
-        </AuthProvider>
+        </ThemeProvider>
         </body>
         </html>
 

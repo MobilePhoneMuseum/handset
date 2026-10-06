@@ -44,8 +44,13 @@ export const login = async ({
     )
     const user = await res.json()
     if (!res.ok && user) {
-        if (user.errors.length > 0) {
-            throw new Error(user.errors[0].message)
+        if (user.errors && user.errors.length > 0) {
+            const firstError = user.errors[0]
+            const error = new Error(firstError.message || "Authentication failed")
+            if (firstError.extensions?.code) {
+                (error as unknown as { code?: string }).code = firstError.extensions.code
+            }
+            throw error
         }
         throw new Error("Email address or password is invalid")
     }

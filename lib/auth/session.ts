@@ -1,8 +1,30 @@
-import {getServerSession} from "next-auth/next"
+import {auth} from "./auth";
+import {headers} from "next/headers";
+import type {UserSession} from "./types";
 
-import {options} from "./options"
+export async function getSession() {
+    try {
+        const headerList = await headers();
+        const session = await auth.api.getSession({
+            headers: headerList,
+        });
+        return session as {
+            user: UserSession;
+            session: {
+                id: string;
+                userId: string;
+                token: string;
+                expiresAt: Date;
+                createdAt: Date;
+                updatedAt: Date;
+            };
+        } | null;
+    } catch {
+        return null;
+    }
+}
 
-export async function getUser() {
-    const session = await getServerSession(options)
-    return session?.user
+export async function getUser(): Promise<UserSession | undefined> {
+    const session = await getSession();
+    return session?.user;
 }

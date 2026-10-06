@@ -21,7 +21,8 @@ interface AuthFormProps {
     error?: string;
     buttonText: string;
     onSubmit: (data: Data) => void;
-    className?: string,
+    className?: string;
+    showOtp?: boolean;
 }
 
 export default function AuthForm({
@@ -30,6 +31,7 @@ export default function AuthForm({
                                      buttonText,
                                      onSubmit,
                                      className,
+                                     showOtp,
                                      ...props
                                  }: AuthFormProps) {
     const [formData, setFormData] = useState({
@@ -37,6 +39,8 @@ export default function AuthForm({
         password: '',
         otp: '',
     });
+
+    const isOtpVisible = showOtp !== undefined ? showOtp : Boolean(error && /otp/i.test(error));
 
     const handleFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -54,7 +58,7 @@ export default function AuthForm({
         <div className={cn("flex flex-col gap-6", className)} {...props}>
             <Card>
                 <CardHeader>
-                    <CardTitle>Login to MPM Directus</CardTitle>
+                    <CardTitle>{title || "Login to MPM Directus"}</CardTitle>
                     <CardDescription>
                         Use <b>Directus</b> credentials, please.
                     </CardDescription>
@@ -91,26 +95,28 @@ export default function AuthForm({
                                 <Input id="password" name="password" type="password" value={formData.password}
                                        onChange={handleInputChange} required/>
                             </Field>
+                            {isOtpVisible ? (
+                                <Field>
+                                    <div className="flex items-center justify-between">
+                                        <FieldLabel htmlFor="otp">OTP</FieldLabel>
+                                    </div>
+                                    <InputOTP maxLength={6} name="otp"
+                                              id="otp"
+                                              value={formData.otp}
+                                              onChange={(value) => setFormData((prev) => ({...prev, otp: value}))}>
+                                        <InputOTPGroup>
+                                            <InputOTPSlot index={0}/>
+                                            <InputOTPSlot index={1}/>
+                                            <InputOTPSlot index={2}/>
+                                            <InputOTPSlot index={3}/>
+                                            <InputOTPSlot index={4}/>
+                                            <InputOTPSlot index={5}/>
+                                        </InputOTPGroup>
+                                    </InputOTP>
+                                </Field>
+                            ) : null}
                             <Field>
-                                <div className="flex items-center justify-between">
-                                    <FieldLabel htmlFor="otp">OTP</FieldLabel>
-                                </div>
-                                <InputOTP maxLength={6} name="otp"
-                                          id="otp"
-                                          value={formData.otp}
-                                          onChange={(value) => setFormData((prev) => ({...prev, otp: value}))}>
-                                    <InputOTPGroup>
-                                        <InputOTPSlot index={0}/>
-                                        <InputOTPSlot index={1}/>
-                                        <InputOTPSlot index={2}/>
-                                        <InputOTPSlot index={3}/>
-                                        <InputOTPSlot index={4}/>
-                                        <InputOTPSlot index={5}/>
-                                    </InputOTPGroup>
-                                </InputOTP>
-                            </Field>
-                            <Field>
-                                <Button type="submit">Login</Button>
+                                <Button type="submit">{buttonText || "Login"}</Button>
                             </Field>
                         </FieldGroup>
                     </form>

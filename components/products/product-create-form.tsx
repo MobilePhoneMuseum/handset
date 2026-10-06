@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import {useRouter} from 'next/navigation';
-import {useSession} from 'next-auth/react';
+import {useSession} from '@/lib/auth/auth-client';
 import {useMutation} from '@apollo/client/react';
 import {useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
@@ -378,7 +378,7 @@ export function ProductCreateForm() {
                     </CardHeader>
                     <CardContent>
                         <ProductImageCapture
-                            accessToken={session?.access_token}
+                            accessToken={session?.user?.accessToken}
                             value={form.watch('image_reference')}
                             onChange={(file) => form.setValue('image_reference', file || null, {shouldValidate: true})}
                             disabled={isSubmitting}

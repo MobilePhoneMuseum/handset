@@ -1,19 +1,18 @@
 import {HttpLink} from "@apollo/client";
-import {ApolloClient, InMemoryCache, registerApolloClient,} from "@apollo/client-integration-nextjs";
-import {getServerSession} from "next-auth/next";
-import {options} from "@/lib/auth/options";
+import {ApolloClient, InMemoryCache, registerApolloClient} from "@apollo/client-integration-nextjs";
+import {getSession} from "@/lib/auth/session";
 
 export const {getClient, query, PreloadQuery} = registerApolloClient(async () => {
-    const session = await getServerSession(options);
+    const session = await getSession();
 
     return new ApolloClient({
         cache: new InMemoryCache(),
         link: new HttpLink({
             uri: `${process.env.NEXT_PUBLIC_DIRECTUS_API}/graphql`,
             headers: {
-                ...(session?.access_token
+                ...(session?.user?.accessToken
                     ? {
-                        Authorization: `Bearer ${session.access_token}`,
+                        Authorization: `Bearer ${session.user.accessToken}`,
                     }
                     : {}),
             },

@@ -1,0 +1,22 @@
+export interface UserSession {
+    id: string;
+    email: string;
+    name?: string;
+    firstName?: string;
+    lastName?: string;
+    image?: string | null;
+    accessToken?: string;
+    refreshToken?: string;
+}
+
+export interface SessionData {
+    user: UserSession;
+    session: {
+        id: string;
+        userId: string;
+        token: string;
+        expiresAt: Date;
+        createdAt: Date;
+        updatedAt: Date;
+    };
+}
