@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import {useRouter} from 'next/navigation';
-import {useSession} from '@/lib/auth/auth-client';
+import {getAccessToken} from '@/lib/auth/access-token';
 import {useMutation} from '@apollo/client/react';
 import {useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
@@ -80,7 +80,6 @@ const statusItems = {
 
 export function ProductCreateForm() {
     const router = useRouter();
-    const {data: session} = useSession();
     const {isConnected, isPrinting, printProductLabel} = usePrinter();
 
     const [createdProduct, setCreatedProduct] = React.useState<CreatedProductItem | null>(null);
@@ -378,7 +377,7 @@ export function ProductCreateForm() {
                     </CardHeader>
                     <CardContent>
                         <ProductImageCapture
-                            accessToken={session?.user?.accessToken}
+                            getAccessToken={getAccessToken}
                             value={form.watch('image_reference')}
                             onChange={(file) => form.setValue('image_reference', file || null, {shouldValidate: true})}
                             disabled={isSubmitting}

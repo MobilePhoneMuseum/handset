@@ -22,14 +22,14 @@ import {Label} from "@/components/ui/label";
 import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from "../ui/accordion";
 
 export interface ProductImageCaptureProps {
-    accessToken?: string;
+    getAccessToken: () => Promise<string | null>;
     value?: DirectusUploadedFile | { id?: string } | string | null;
     onChange: (file?: DirectusUploadedFile | null) => void;
     disabled?: boolean;
 }
 
 export function ProductImageCapture({
-                                        accessToken,
+                                        getAccessToken,
                                         value,
                                         onChange,
                                         disabled = false,
@@ -86,6 +86,7 @@ export function ProductImageCapture({
 
     const handleUpload = React.useCallback(
         async (fileOrBlob: Blob | File, filename: string) => {
+            const accessToken = await getAccessToken();
             if (!accessToken) {
                 const msg = 'Authentication session missing or expired. Please re-authenticate.';
                 setUploadError(msg);
@@ -123,7 +124,7 @@ export function ProductImageCapture({
                 setIsUploading(false);
             }
         },
-        [accessToken, onChange]
+        [getAccessToken, onChange]
     );
 
     const handleCapture = React.useCallback(() => {

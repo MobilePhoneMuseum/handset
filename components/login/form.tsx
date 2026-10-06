@@ -30,7 +30,7 @@ export default function LoginForm() {
                     if (result?.error) {
                         const err = result.error;
                         const errMsg = err.message || 'Unknown error occurred; please try again';
-                        const errCode = (err as any).code;
+                        const errCode = err.code;
 
                         if (errCode === 'INVALID_OTP') {
                             setShowOtp(true);
@@ -41,14 +41,13 @@ export default function LoginForm() {
                         return;
                     }
 
-                    resolve({name: "Log in"});
                     await authClient.getSession({query: {disableCookieCache: true}});
+                    resolve({name: "Log in"});
                     router.push('/');
                     router.refresh();
                 } catch (err: any) {
                     const errMsg = err?.message || 'Unknown error occurred; please try again';
                     const errCode = err?.code;
-                    setError(errMsg);
                     if (errCode === 'INVALID_OTP') {
                         setShowOtp(true);
                     } else {

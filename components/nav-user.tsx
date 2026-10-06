@@ -16,6 +16,7 @@ import {HugeiconsIcon} from "@hugeicons/react"
 import {Logout01Icon, MoreVerticalCircle01Icon, UserIcon} from "@hugeicons/core-free-icons"
 import {authClient, useSession} from "@/lib/auth/auth-client";
 import {useRouter} from "next/navigation";
+import {clearAccessToken} from "@/lib/auth/access-token";
 
 export function NavUserSkeleton() {
     return (
@@ -118,6 +119,7 @@ export function NavUser() {
                             await authClient.signOut({
                                 fetchOptions: {
                                     onSuccess: () => {
+                                        clearAccessToken();
                                         router.push('/login');
                                         router.refresh();
                                     }

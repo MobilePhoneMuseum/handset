@@ -3,7 +3,7 @@
 import {ApolloClient, ApolloNextAppProvider, InMemoryCache} from "@apollo/client-integration-nextjs";
 import {HttpLink} from "@apollo/client";
 import {setContext} from "@apollo/client/link/context";
-import {authClient} from "@/lib/auth/auth-client";
+import {getAccessToken} from "@/lib/auth/access-token";
 
 function makeClient() {
     const httpLink = new HttpLink({
@@ -11,8 +11,7 @@ function makeClient() {
     });
 
     const authLink = setContext(async (_, {headers = {}}) => {
-        const session = await authClient.getSession();
-        const accessToken = (session?.data?.user as any)?.accessToken;
+        const accessToken = await getAccessToken();
 
         return {
             headers: {

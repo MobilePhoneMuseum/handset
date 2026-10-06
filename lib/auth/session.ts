@@ -1,24 +1,12 @@
 import {auth} from "./auth";
-import {headers} from "next/headers";
-import type {UserSession} from "./types";
+import {cookies, headers} from "next/headers";
+import type {SessionData, UserSession} from "./types";
+import {TOKEN_COOKIE, unsealTokens} from "./tokens";
 
-export async function getSession() {
+export async function getSession(): Promise<SessionData | null> {
     try {
-        const headerList = await headers();
-        const session = await auth.api.getSession({
-            headers: headerList,
-        });
-        return session as {
-            user: UserSession;
-            session: {
-                id: string;
-                userId: string;
-                token: string;
-                expiresAt: Date;
-                createdAt: Date;
-                updatedAt: Date;
-            };
-        } | null;
+        const session = await auth.api.getSession({headers: await headers()});
+        return session as SessionData | null;
     } catch {
         return null;
     }
@@ -27,4 +15,10 @@ export async function getSession() {
 export async function getUser(): Promise<UserSession | undefined> {
     const session = await getSession();
     return session?.user;
+}
+
+/** Server-side Directus access token. proxy.ts keeps it fresh before rendering. */
+export async function getAccessToken(): Promise<string | undefined> {
+    const tokens = await unsealTokens((await cookies()).get(TOKEN_COOKIE)?.value);
+    return tokens?.accessToken;
 }

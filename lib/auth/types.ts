@@ -5,8 +5,6 @@ export interface UserSession {
     firstName?: string;
     lastName?: string;
     image?: string | null;
-    accessToken?: string;
-    refreshToken?: string;
 }
 
 export interface SessionData {

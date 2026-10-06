@@ -38,25 +38,25 @@ export const login = async ({
         `${process.env.NEXT_PUBLIC_DIRECTUS_API}/auth/login`,
         {
             method: "POST",
-            body: JSON.stringify({email, password, otp}),
+            // Directus rejects an empty "otp", so only send it when one was entered.
+            body: JSON.stringify({email, password, ...(otp ? {otp} : {})}),
             headers: {"Content-Type": "application/json"},
+            cache: "no-store",
         }
     )
-    const user = await res.json()
-    if (!res.ok && user) {
-        if (user.errors && user.errors.length > 0) {
-            const firstError = user.errors[0]
-            const error = new Error(firstError.message || "Authentication failed")
-            if (firstError.extensions?.code) {
-                (error as unknown as { code?: string }).code = firstError.extensions.code
-            }
-            throw error
+    const body = await res.json().catch(() => null)
+    if (!res.ok) {
+        const firstError = body?.errors?.[0]
+        const error = new Error(firstError?.message || "Email address or password is invalid")
+        if (firstError?.extensions?.code) {
+            (error as unknown as { code?: string }).code = firstError.extensions.code
         }
-        throw new Error("Email address or password is invalid")
+        throw error
     }
-    if (res.ok && user) {
-        return user?.data
+    if (!body?.data?.access_token) {
+        throw new Error("Authentication failed")
     }
+    return body.data as { access_token: string; refresh_token?: string; expires?: number }
 }
 
 export const uploadDirectusFile = async (

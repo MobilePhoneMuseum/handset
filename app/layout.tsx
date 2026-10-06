@@ -50,7 +50,7 @@ export default async function RootLayout({children}: LayoutProps<"/">) {
                                 <SiteHeader/>
                                 <div className="flex flex-1 flex-col">
                                     <div className="@container/main flex flex-1 flex-col gap-2">
-                                        <div className="flex flex-col gap-4 py-4 px-2 md:gap-6 md:py-6">
+                                        <div className="flex flex-1 flex-col gap-4 py-4 px-2 md:gap-6 md:py-6">
                                             {children}
                                             <Toaster/>
                                         </div>

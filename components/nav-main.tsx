@@ -10,6 +10,7 @@ import {
 import {HugeiconsIcon} from "@hugeicons/react"
 import {PlusSignCircleIcon} from "@hugeicons/core-free-icons"
 import Link from "next/link"
+import {useSession} from "@/lib/auth/auth-client"
 
 export function NavMain({
                             items,
@@ -20,6 +21,12 @@ export function NavMain({
         icon?: React.ReactNode
     }[]
 }) {
+    const {data: session} = useSession()
+
+    if (!session?.user) {
+        return null
+    }
+
     return (
         <SidebarGroup>
             <SidebarGroupContent className="flex flex-col gap-2">

@@ -14,8 +14,9 @@ import {
     SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import {HugeiconsIcon} from "@hugeicons/react"
-import {BarcodeScanIcon, BoxIcon, FlipPhoneIcon, HomeIcon} from "@hugeicons/core-free-icons"
+import {BoxIcon, FlipPhoneIcon} from "@hugeicons/core-free-icons"
 import {NavSecondary} from "@/components/nav-secondary";
+import Link from "next/link";
 
 const data = {
     user: {
@@ -25,26 +26,19 @@ const data = {
     },
     navMain: [
         {
-            title: "Home",
-            url: "/",
-            icon: (
-                <HugeiconsIcon icon={HomeIcon} strokeWidth={2}/>
-            ),
-        },
-        {
             title: "Products",
             url: "/products/",
             icon: (
                 <HugeiconsIcon icon={BoxIcon} strokeWidth={2}/>
             ),
         },
-        {
-            title: "Scanify",
-            url: "/scan/",
-            icon: (
-                <HugeiconsIcon icon={BarcodeScanIcon} strokeWidth={2}/>
-            ),
-        }
+        // {
+        //     title: "Scanify",
+        //     url: "/scan/",
+        //     icon: (
+        //         <HugeiconsIcon icon={BarcodeScanIcon} strokeWidth={2}/>
+        //     ),
+        // }
     ],
     navSecondary: [],
     documents: [],
@@ -58,7 +52,7 @@ export function AppSidebar({...props}: React.ComponentProps<typeof Sidebar>) {
                     <SidebarMenuItem>
                         <SidebarMenuButton
                             className="data-[slot=sidebar-menu-button]:p-1.5!"
-                            render={<a href="#"/>}
+                            render={<Link href="/"/>}
                         >
                             <HugeiconsIcon icon={FlipPhoneIcon} strokeWidth={2} className="size-5!"/>
                             <span className="text-base font-nokia-fc22 font-black font-heading uppercase">Handset</span>

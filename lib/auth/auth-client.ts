@@ -9,7 +9,7 @@ export const directusAuthClient = () => {
         $InferServerPlugin: {} as ReturnType<typeof directusAuthPlugin>,
         atomListeners: [
             {
-                matcher: (path: string) => path === "/sign-in/credentials" || path === "/token/refresh",
+                matcher: (path: string) => path === "/sign-in/credentials",
                 signal: "$sessionSignal",
             },
         ],
