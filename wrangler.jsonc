@@ -22,6 +22,7 @@
   ],
   "vars": {
     "NEXTJS_ENV": "production",
+    "NEXT_PUBLIC_ENVIRONMENT": "production",
     "NEXT_PUBLIC_APP_URL": "https://handset.mobilephonemuseum.com",
     "NEXT_PUBLIC_DIRECTUS_API": "https://cms.mobilephonemuseum.com"
   },
