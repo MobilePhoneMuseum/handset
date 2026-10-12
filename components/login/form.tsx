@@ -65,7 +65,7 @@ export default function LoginForm() {
 
     return (
         <AuthForm
-            title="Login here"
+            title="Log In to MPM Directus"
             error={error}
             showOtp={showOtp}
             onSubmit={handleFormSubmit}
