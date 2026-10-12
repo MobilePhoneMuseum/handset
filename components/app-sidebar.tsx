@@ -14,11 +14,10 @@ import {
     SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import {HugeiconsIcon} from "@hugeicons/react"
-import {BoxIcon, FlipPhoneIcon, Leaf01Icon} from "@hugeicons/core-free-icons"
+import {BoxIcon, FlipPhoneIcon} from "@hugeicons/core-free-icons"
 import {NavSecondary} from "@/components/nav-secondary";
 import Link from "next/link";
-import env from "@/lib/env";
-import {Badge} from "@/components/ui/badge";
+import {AppEnvBadge} from "@/components/app-env-badge";
 
 const data = {
     user: {
@@ -58,13 +57,7 @@ export function AppSidebar({...props}: React.ComponentProps<typeof Sidebar>) {
                         >
                             <HugeiconsIcon icon={FlipPhoneIcon} strokeWidth={2} className="size-5!"/>
                             <span className="text-base font-nokia-fc22 font-black font-heading uppercase">Handset</span>
-                            {!env.isProduction && (
-                                <Badge
-                                    className="ml-auto rounded-sm bg-amber-500/15 px-1.5 py-0.5 text-xs font-semibold uppercase tracking-wide text-amber-600 dark:text-amber-400">
-                                    <HugeiconsIcon icon={Leaf01Icon} data-icon="inline-start"/>
-                                    {env.appEnv}
-                                </Badge>
-                            )}
+                            <AppEnvBadge size="sm" className="ml-auto"/>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                 </SidebarMenu>
