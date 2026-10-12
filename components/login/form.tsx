@@ -41,7 +41,6 @@ export default function LoginForm() {
                         return;
                     }
 
-                    await authClient.getSession({query: {disableCookieCache: true}});
                     resolve({name: "Log in"});
                     router.push('/');
                     router.refresh();

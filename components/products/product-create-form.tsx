@@ -35,7 +35,7 @@ import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from '@/
 import {Field, FieldError, FieldGroup, FieldLabel} from '@/components/ui/field';
 import {toast} from '@/components/ui/toast';
 import {usePrinter} from '@/hooks/use-printer';
-import {type Product} from '@/types/gql/graphql';
+import {type Product} from '@/types/gql/schema';
 import {CREATE_PRODUCT} from '@/app/products/new/queries';
 import {productFormSchema, type ProductFormValues,} from '@/lib/validations/product';
 import {type ModelItem, ModelSelectOrCreate,} from '@/components/products/model-select-or-create';

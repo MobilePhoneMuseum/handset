@@ -1,0 +1,68 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "handset",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": [
+    "nodejs_compat",
+    "nodejs_compat_populate_process_env",
+    "global_fetch_strictly_public"
+  ],
+  "env": {
+    "production": {
+      "observability": {
+        "logs": {
+          "enabled": true,
+          "invocation_logs": false
+        }
+      },
+      "routes": [
+        {
+          "pattern": "handset.mobilephonemuseum.com",
+          "custom_domain": true
+        }
+      ],
+      "secrets": {
+        "required": [
+          "BETTER_AUTH_SECRET"
+        ]
+      },
+      "vars": {
+        "NEXT_PUBLIC_APP_ENV": "production",
+        "NEXT_PUBLIC_APP_URL": "https://handset.mobilephonemuseum.com",
+        "NEXT_PUBLIC_DIRECTUS_API": "https://cms.mobilephonemuseum.com"
+      }
+    },
+    "development": {
+      "observability": {
+        "logs": {
+          "enabled": true,
+          "invocation_logs": true
+        }
+      },
+      "routes": [
+        {
+          "pattern": "handset.dev.mobilephonemuseum.com",
+          "custom_domain": true
+        }
+      ],
+      "secrets": {
+        "required": [
+          "BETTER_AUTH_SECRET"
+        ]
+      },
+      "vars": {
+        "NEXT_PUBLIC_APP_ENV": "development",
+        "NEXT_PUBLIC_APP_URL": "https://handset.dev.mobilephonemuseum.com",
+        "NEXT_PUBLIC_DIRECTUS_API": "https://cms.mobilephonemuseum.com"
+      }
+    }
+  },
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "observability": {
+    "enabled": true
+  }
+}

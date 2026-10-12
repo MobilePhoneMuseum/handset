@@ -40,7 +40,7 @@ import {toast} from '@/components/ui/toast';
 import {cn} from '@/lib/utils';
 import {CREATE_MODEL, SEARCH_BRANDS, SEARCH_FORM_FACTORS, SEARCH_MODELS,} from '@/app/products/new/queries';
 import {modelFormSchema, type ModelFormValues, slugify,} from '@/lib/validations/product';
-import {Model} from "@/types/gql/graphql";
+import {Model} from "@/types/gql/schema";
 
 export type ModelItem = Model;
 

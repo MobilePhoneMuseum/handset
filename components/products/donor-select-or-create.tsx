@@ -30,7 +30,7 @@ import {toast} from '@/components/ui/toast';
 import {cn} from '@/lib/utils';
 import {CREATE_DONOR, SEARCH_DONORS,} from '@/app/products/new/queries';
 import {donorFormSchema, type DonorFormValues, slugify,} from '@/lib/validations/product';
-import {Donor} from "@/types/gql/graphql";
+import {Donor} from "@/types/gql/schema";
 
 export type DonorItem = Donor;
 

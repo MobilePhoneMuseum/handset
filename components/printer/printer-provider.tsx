@@ -4,7 +4,7 @@ import React, {createContext, useCallback, useEffect, useState} from 'react';
 import {PrinterService, printerService} from '@/lib/printer/printer-service';
 import {buildFeedDocument, buildProductLabelDocument} from '@/lib/printer/label-templates';
 import type {PrinterContextValue, PrinterState, PrintOptions,} from '@/lib/printer/types';
-import {Product} from "@/types/gql/graphql";
+import {Product} from "@/types/gql/schema";
 
 export const PrinterContext = createContext<PrinterContextValue | null>(null);
 

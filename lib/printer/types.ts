@@ -1,5 +1,5 @@
 import type {LabelPrinterUsb} from 'webzlp';
-import {Product} from "@/types/gql/graphql";
+import {Product} from "@/types/gql/schema";
 
 // Right now we only support printing the small phone labels - this will expand in future for things like container labels
 export type LabelSize = 'small_47x20'

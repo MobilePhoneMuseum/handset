@@ -15,9 +15,11 @@ const config: CodegenConfig = {
     ignoreNoDocuments: true,
 
     generates: {
+        // Operation types and typed documents. The client preset runs typescript-operations, which
+        // also emits the input types it needs, so the `typescript` plugin must not be added here.
         './types/gql/': {
             preset: "client",
-            plugins: ['typescript', 'typescript-resolvers'],
+            plugins: [],
             presetConfig: {
                 fragmentMasking: false,
                 gqlTagName: 'gql',
@@ -30,6 +32,14 @@ const config: CodegenConfig = {
                 // Apollo Client doesn't add the `__typename` field to root types so
                 // don't generate a type for the `__typename` for root operation types.
                 skipTypeNameForRoot: true,
+            },
+        },
+        // Schema types (Product, Donor, Model, ...) and resolvers, kept apart to avoid duplicate declarations.
+        './types/gql/schema.ts': {
+            plugins: ['typescript', 'typescript-resolvers'],
+            hooks: {afterOneFileWrite: ['tslint --fix']},
+            config: {
+                useTypeImports: true,
             },
         },
     },

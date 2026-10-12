@@ -3,7 +3,7 @@ import {LabelDocumentBuilder, ReadyToPrintDocuments} from 'webzlp';
 import {DATAMatrix, encodeToMatrix} from 'datamatrix-svg-ts';
 import icon from '@/public/icon.svg';
 import type {LabelDimensions, LabelSize, PrintOptions} from './types';
-import {Product} from "@/types/gql/graphql";
+import {Product} from "@/types/gql/schema";
 import {escapeXml} from "@/lib/utils";
 
 export const LABEL_DIMENSIONS: Record<LabelSize, LabelDimensions> = {

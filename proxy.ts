@@ -12,10 +12,19 @@ import {
 // Specify protected and public routes
 const publicRoutes = ['/login', '/signup', '/'];
 
-function redirectToLogin(req: NextRequest) {
-    const res = NextResponse.redirect(new URL('/login', req.nextUrl));
+// Expire the Directus token cookie and every Better Auth cookie so the client store shows logged out.
+function clearAuthCookies(req: NextRequest, res: NextResponse) {
     res.cookies.set(TOKEN_COOKIE, '', {...tokenCookieOptions, maxAge: 0});
+    for (const {name} of req.cookies.getAll()) {
+        if (name.includes('better-auth')) {
+            res.cookies.set(name, '', {path: '/', maxAge: 0});
+        }
+    }
     return res;
+}
+
+function redirectToLogin(req: NextRequest) {
+    return clearAuthCookies(req, NextResponse.redirect(new URL('/login', req.nextUrl)));
 }
 
 export default async function proxy(req: NextRequest) {
@@ -28,12 +37,16 @@ export default async function proxy(req: NextRequest) {
         return isPublicRoute ? NextResponse.next() : NextResponse.redirect(new URL('/login', req.nextUrl));
     }
 
-    if (path === '/login') {
-        return NextResponse.redirect(new URL('/', req.nextUrl));
-    }
-
     // Refresh the Directus token here, as server components can't set cookies.
     let tokens = await unsealTokens(req.cookies.get(TOKEN_COOKIE)?.value);
+
+    if (path === '/login') {
+        // Only bounce away from /login when the Directus tokens are usable, otherwise we loop.
+        return tokens
+            ? NextResponse.redirect(new URL('/', req.nextUrl))
+            : clearAuthCookies(req, NextResponse.next());
+    }
+
     if (!tokens) {
         return isPublicRoute ? NextResponse.next() : redirectToLogin(req);
     }

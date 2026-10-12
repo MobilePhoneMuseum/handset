@@ -18,7 +18,7 @@ import {Label} from '@/components/ui/label';
 import {toast} from '@/components/ui/toast';
 import {HugeiconsIcon} from '@hugeicons/react';
 import {Alert02Icon, Loading03Icon, PrinterIcon, UsbIcon,} from '@hugeicons/core-free-icons';
-import {Product} from "@/types/gql/graphql";
+import {Product} from "@/types/gql/schema";
 
 interface LabelPreviewDialogProps {
     product: Product | null;
@@ -58,7 +58,7 @@ export function LabelPreviewDialog({
             if (ok) {
                 toast.add({
                         type: 'success',
-                    description: `Printed label for ${product.model_id?.display_name || product.model_id?.name || product.id}`
+                        description: `Printed label for ${product.model_id?.display_name || product.model_id?.name || product.id}`
                     }
                 );
                 onOpenChange(false);
