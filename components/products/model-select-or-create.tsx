@@ -177,7 +177,7 @@ export function ModelSelectOrCreate({
                             className="pointer-events-none absolute left-3 size-4 text-muted-foreground"
                         />
                         <Input
-                            placeholder="Search existing models (e.g. Nokia 3310, iPhone, Matrix)..."
+                            placeholder="Search existing models..."
                             value={searchTerm}
                             onChange={(e) => {
                                 setSearchTerm(e.target.value);

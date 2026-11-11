@@ -26,12 +26,17 @@ export const productImageFormSchema = z.looseObject({
     id: z.string(),
 });
 
+export const productImeiSchema = z.string()
+    .trim()
+    .min(1, 'IMEI/Serial Number is required')
+    .max(64, 'IMEI/Serial must be 64 characters or less');
+
 export const productFormSchema = z.object({
     model: productModelFormSchema.nullable().refine((val) => val !== null && !!val.id, {
         message: 'Model is required',
     }),
     donor_id: productDonorFormSchema.nullable().optional(),
-    imei: z.string().max(64, 'IMEI/Serial must be 64 characters or less').optional(),
+    imei: z.string().trim().max(64, 'IMEI/Serial must be 64 characters or less'),
     description: z.string().max(500, 'Description must be 500 characters or less').optional(),
     note: z.string().max(1000, 'Note must be 1000 characters or less').optional(),
     status: z.enum(['draft', 'published', 'archived']),

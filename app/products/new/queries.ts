@@ -93,6 +93,22 @@ export const CREATE_PRODUCT = gql`
     }
 `;
 
+export const LOOKUP_PRODUCT_BY_IMEI = gql`
+    query LookupProductByImei($imei: String!) {
+        product(filter: {imei: {_eq: $imei}}, limit: 1) {
+            id
+            imei
+            model_id {
+                name
+                display_name
+                brand_id {
+                    name
+                }
+            }
+        }
+    }
+`;
+
 export const CREATE_MODEL = gql`
     mutation CreateModel($data: create_model_input!) {
         create_model_item(data: $data) {
